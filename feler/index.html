@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f4f5f0">
+    <meta name="description" content="Feler — інтерактивні маршрути з JavaScript, TypeScript, Python, SQL, HTML та CSS.">
+    <title>Feler — вчися створювати веб</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/material-darker.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/javascript/javascript.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/css/css.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/xml/xml.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/htmlmixed/htmlmixed.min.js" defer></script>
+    <script src="scvirt.js" defer></script>
+</head>
+<body>
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Основна навігація">
+            <a class="brand" href="#home" aria-label="Feler, на головну">
+                <span class="brand-mark">f</span><span>feler<span class="brand-dot">.</span></span>
+            </a>
+            <p class="nav-caption">НАВЧАННЯ</p>
+            <nav class="side-nav">
+                <a class="nav-link is-active" href="#languageGate" id="navLanguages"><span class="nav-icon">⌘</span>Мови</a>
+                <a class="nav-link" href="#lessonRail" id="navRoute"><span class="nav-icon">▤</span>Мій маршрут</a>
+                <a class="nav-link" href="#sandbox" id="navSandbox"><span class="nav-icon">▶</span>Пісочниця</a>
+            </nav>
+            <div class="sidebar-course">
+                <span class="mini-label">ТВОЯ ЦІЛЬ</span>
+                <div class="goal-row"><span>Основи вебу</span><span id="sidebarProgress">0%</span></div>
+                <div class="progress-track"><span id="sidebarProgressBar"></span></div>
+                <p>Ще трохи — і перший проєкт готовий.</p>
+            </div>
+            <div class="sidebar-bottom">
+                <div class="avatar">М</div>
+                <div><strong>Майбутній розробник</strong><span>Рівень: початківець</span></div>
+                <span class="more-icon" aria-hidden="true">···</span>
+            </div>
+        </aside>
+
+        <main id="home" class="main-content">
+            <header class="topbar">
+                <div class="breadcrumb"><span>Feler</span><span class="crumb-slash">/</span><strong id="breadcrumbLabel">Обери мову</strong></div>
+                <div class="topbar-actions">
+                    <span class="streak"><span aria-hidden="true">✦</span> <strong id="streakCount">0</strong> днів поспіль</span>
+                    <button class="change-language" id="changeLanguage" type="button">Змінити мову</button>
+                </div>
+            </header>
+
+            <section class="language-gate" id="languageGate" aria-labelledby="languageTitle">
+                <div class="language-intro">
+                    <div>
+                        <p class="eyebrow"><span class="status-dot"></span> ТВОЯ НАВЧАЛЬНА МАЙСТЕРНЯ</p>
+                        <h1 id="languageTitle">Що будемо створювати?</h1>
+                        <p>Обери мову або технологію. Почнемо з <code>Hello, World!</code> і одразу перейдемо до коду.</p>
+                    </div>
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=720&q=80" alt="Ноутбук із кодом на екрані" loading="lazy">
+                </div>
+                <div class="track-filters" role="group" aria-label="Фільтри навчальних маршрутів">
+                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="trackSearch" type="search" placeholder="Знайти мову або тему" aria-label="Знайти мову або тему"></label>
+                    <label class="track-filter">Тема<select id="trackTopic"><option value="all">Усі теми</option><option value="web">Веб</option><option value="data">Дані</option><option value="logic">Логіка</option></select></label>
+                    <label class="track-filter">Рівень<select id="trackLevel"><option value="all">Будь-який</option><option value="beginner">Початковий</option><option value="intermediate">Середній</option></select></label>
+                    <label class="track-filter">Тривалість<select id="trackDuration"><option value="all">Будь-яка</option><option value="short">До 30 хв</option><option value="long">Понад 30 хв</option></select></label>
+                </div>
+                <div class="track-grid" id="trackGrid">
+                    <button class="track-card track-js" type="button" data-track-choice="javascript" data-topic="web logic" data-level="beginner" data-time="35" data-search="javascript js веб логіка інтерактив"><span class="track-symbol">JS</span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>JavaScript</strong><span class="track-description">Додавай поведінку й інтерактивність сайтам.</span><span class="track-meta">4 уроки <i></i> 35 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-python" type="button" data-track-choice="python" data-topic="data logic" data-level="beginner" data-time="40" data-search="python автоматизація дані логіка"><span class="track-symbol">Py</span><span class="track-category">ПРОГРАМУВАННЯ · ЛОГІКА</span><strong>Python</strong><span class="track-description">Почни з команд, змінних і невеликих програм.</span><span class="track-meta">4 уроки <i></i> 40 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-typescript" type="button" data-track-choice="typescript" data-topic="web logic" data-level="intermediate" data-time="45" data-search="typescript ts веб типи"><span class="track-symbol">TS</span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>TypeScript</strong><span class="track-description">Додавай типи й надійність до JavaScript.</span><span class="track-meta">4 уроки <i></i> 45 хв <i></i> Середній</span></button>
+                    <button class="track-card track-sql" type="button" data-track-choice="sql" data-topic="data" data-level="beginner" data-time="30" data-search="sql база даних запити"><span class="track-symbol">SQL</span><span class="track-category">ДАНІ · БАЗИ ДАНИХ</span><strong>SQL</strong><span class="track-description">Отримуй відповіді з таблиць за допомогою запитів.</span><span class="track-meta">4 уроки <i></i> 30 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-html" type="button" data-track-choice="html" data-topic="web" data-level="beginner" data-time="25" data-search="html розмітка структура веб"><span class="track-symbol">&lt;/&gt;</span><span class="track-category">ВЕБ · РОЗМІТКА</span><strong>HTML</strong><span class="track-description">Створюй структуру сторінок і додавай зміст.</span><span class="track-meta">4 уроки <i></i> 25 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-css" type="button" data-track-choice="css" data-topic="web" data-level="beginner" data-time="25" data-search="css стилі дизайн веб"><span class="track-symbol">#</span><span class="track-category">ВЕБ · СТИЛІ</span><strong>CSS</strong><span class="track-description">Оформлюй сторінки кольорами, сітками та стилями.</span><span class="track-meta">4 уроки <i></i> 25 хв <i></i> Початковий</span></button>
+                </div>
+                <p class="empty-state" id="emptyTracks" hidden>За цими фільтрами маршрутів не знайдено.</p>
+            </section>
+
+            <section class="welcome-row" aria-labelledby="welcomeTitle">
+                <div>
+                    <p class="eyebrow"><span class="status-dot"></span> ТВОЯ НАВЧАЛЬНА МАЙСТЕРНЯ</p>
+                    <h1 id="welcomeTitle">Привіт, творцю<span class="heading-mark">.</span></h1>
+                    <p class="welcome-copy">Сьогодні — чудовий день, щоб написати перший рядок коду.</p>
+                </div>
+                <div class="date-chip"><span class="date-icon">◷</span><span id="todayLabel">Твій темп — твоя сила</span></div>
+            </section>
+
+            <section class="feature-banner" aria-labelledby="featureTitle">
+                <div class="feature-copy">
+                    <span class="feature-tag"><span class="tag-dot"></span> ПРОДОВЖУЙ НАВЧАННЯ</span>
+                    <h2 id="featureTitle">Веб починається<br>з <em>одного рядка.</em></h2>
+                    <p>Збери свій перший інтерактивний сайт — крок за кроком, без зайвої теорії.</p>
+                    <a class="feature-button" href="#courses">До уроків <span aria-hidden="true">↗</span></a>
+                </div>
+                <div class="feature-visual">
+                    <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1100&q=85" alt="Робоче місце розробника з відкритим ноутбуком" loading="lazy">
+                    <div class="image-caption"><span class="caption-dot"></span> Твій наступний проєкт чекає</div>
+                    <div class="floating-code" aria-hidden="true"><span>01</span> &lt;hello world /&gt;</div>
+                </div>
+            </section>
+
+            <section class="directions-section" id="directions" aria-labelledby="directionsTitle">
+                <div class="section-heading directions-heading">
+                    <div><p class="eyebrow">ЗНАЙДИ СВІЙ ШЛЯХ</p><h2 id="directionsTitle">Куди веде код?</h2></div>
+                    <p class="directions-intro">Обери напрям — почати можна з нуля.</p>
+                </div>
+                <div class="direction-grid">
+                    <a class="direction-card direction-frontend" href="#courses" data-direction="frontend">
+                        <span class="direction-icon" aria-hidden="true">&lt;/&gt;</span>
+                        <span class="direction-kicker">01 · ІНТЕРФЕЙСИ</span>
+                        <strong>Фронтенд</strong>
+                        <span class="direction-description">Створюй сторінки, якими зручно користуватися.</span>
+                        <span class="direction-languages">HTML <i></i> CSS <i></i> JavaScript</span>
+                    </a>
+                    <a class="direction-card direction-backend" href="#courses" data-direction="backend">
+                        <span class="direction-icon" aria-hidden="true">{ }</span>
+                        <span class="direction-kicker">02 · СЕРВЕРИ Й ДАНІ</span>
+                        <strong>Бекенд</strong>
+                        <span class="direction-description">Розбирайся, як працюють API, сервери та бази даних.</span>
+                        <span class="direction-languages">Node.js <i></i> Python <i></i> SQL</span>
+                    </a>
+                    <a class="direction-card direction-python" href="#sandbox" data-direction="python">
+                        <span class="direction-icon" aria-hidden="true">Py</span>
+                        <span class="direction-kicker">03 · АВТОМАТИЗАЦІЯ</span>
+                        <strong>Python і дані</strong>
+                        <span class="direction-description">Почни з простих програм і досліджуй дані.</span>
+                        <span class="direction-languages">Python <i></i> алгоритми <i></i> дані</span>
+                    </a>
+                </div>
+            </section>
+
+            <section class="learning-section" id="courses" aria-labelledby="coursesTitle">
+                <div class="section-heading">
+                    <div><p class="eyebrow">МАРШРУТ НАВЧАННЯ</p><h2 id="coursesTitle">Обери наступний крок</h2></div>
+                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="courseSearch" type="search" placeholder="Знайти урок" aria-label="Знайти урок"></label>
+                </div>
+                <div class="filter-row" role="group" aria-label="Фільтр уроків">
+                    <button class="filter-chip is-selected" type="button" data-filter="all">Усі теми <span>05</span></button>
+                    <button class="filter-chip" type="button" data-filter="frontend">Фронтенд</button>
+                    <button class="filter-chip" type="button" data-filter="html">HTML</button>
+                    <button class="filter-chip" type="button" data-filter="css">CSS</button>
+                    <button class="filter-chip" type="button" data-filter="js">JavaScript</button>
+                    <button class="filter-chip" type="button" data-filter="backend">Бекенд</button>
+                    <button class="filter-chip" type="button" data-filter="python">Python</button>
+                </div>
+                <div class="course-grid" id="courseGrid">
+                    <article class="course-card" data-course="html" data-title="Структура вебсторінки">
+                        <div class="course-art art-html"><span class="art-symbol">&lt;/&gt;</span><span class="art-index">01 / 05</span></div>
+                        <div class="course-body"><div class="course-meta"><span class="course-type">HTML · ОСНОВИ</span><span class="course-time">12 хв</span></div><h3>Структура вебсторінки</h3><p>Теги, заголовки та семантика — закладаємо фундамент.</p><div class="course-footer"><span class="lesson-state" data-state="html">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="html" aria-label="Відкрити урок про HTML">↗</button></div></div>
+                    </article>
+                    <article class="course-card" data-course="css" data-title="Стилі та композиція">
+                        <div class="course-art art-css"><span class="art-symbol">{ }</span><span class="art-index">02 / 05</span></div>
+                        <div class="course-body"><div class="course-meta"><span class="course-type">CSS · ДИЗАЙН</span><span class="course-time">18 хв</span></div><h3>Стилі та композиція</h3><p>Кольори, відступи й адаптивна сітка для твого сайту.</p><div class="course-footer"><span class="lesson-state" data-state="css">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="css" aria-label="Відкрити урок про CSS">↗</button></div></div>
+                    </article>
+                    <article class="course-card" data-course="js" data-title="Перший інтерактив">
+                        <div class="course-art art-js"><span class="art-symbol">JS</span><span class="art-index">03 / 05</span></div>
+                        <div class="course-body"><div class="course-meta"><span class="course-type">JAVASCRIPT · ЛОГІКА</span><span class="course-time">20 хв</span></div><h3>Перший інтерактив</h3><p>Змінні та функції оживлять будь-яку вебсторінку.</p><div class="course-footer"><span class="lesson-state" data-state="js">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="js" aria-label="Відкрити урок про JavaScript">↗</button></div></div>
+                    </article>
+                    <article class="course-card" data-course="backend" data-title="Відповідь сервера">
+                        <div class="course-art art-backend"><span class="art-symbol">API</span><span class="art-index">04 / 05</span></div>
+                        <div class="course-body"><div class="course-meta"><span class="course-type">БЕКЕНД · NODE.JS</span><span class="course-time">15 хв</span></div><h3>Відповідь сервера</h3><p>Побач, як сервер повертає відповідь на запит.</p><div class="course-footer"><span class="lesson-state" data-state="backend">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="backend" aria-label="Відкрити урок про відповідь сервера">↗</button></div></div>
+                    </article>
+                    <article class="course-card" data-course="python" data-title="Перші кроки з Python">
+                        <div class="course-art art-python"><span class="art-symbol">Py</span><span class="art-index">05 / 05</span></div>
+                        <div class="course-body"><div class="course-meta"><span class="course-type">PYTHON · ОСНОВИ</span><span class="course-time">12 хв</span></div><h3>Перші кроки з Python</h3><p>Змінні, виведення тексту та проста функція.</p><div class="course-footer"><span class="lesson-state" data-state="python">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="python" aria-label="Відкрити урок про Python">↗</button></div></div>
+                    </article>
+                </div>
+                <p class="empty-state" id="emptyState" hidden>За цим запитом уроків не знайдено.</p>
+            </section>
+
+            <section class="sandbox-section" id="sandbox" aria-labelledby="sandboxTitle">
+                <div class="section-heading sandbox-heading">
+                    <div><p class="eyebrow" id="trackEyebrow">ТВІЙ МАРШРУТ</p><h2 id="sandboxTitle">Пісочниця коду</h2></div>
+                    <label class="language-picker">Мова
+                        <select id="sandboxLanguage" aria-label="Мова програмування">
+                            <option value="html">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="javascript">JavaScript</option>
+                                <option value="typescript">TypeScript</option>
+                            <option value="python">Python</option>
+                                <option value="sql">SQL</option>
+                        </select>
+                    </label>
+                </div>
+                <div class="route-progress" id="routeProgress" hidden>
+                    <div class="route-progress-heading"><strong id="routeName"></strong><span id="routeProgressLabel"></span></div>
+                    <div class="progress-track"><span id="routeProgressBar"></span></div>
+                    <nav class="lesson-rail" id="lessonRail" aria-label="Уроки маршруту"></nav>
+                </div>
+                <div class="sandbox-panel">
+                    <div class="sandbox-editor editor-wrap">
+                        <div class="editor-topbar"><div class="window-dots"><i></i><i></i><i></i></div><span id="sandboxFilename">index.html</span><button class="reset-button" id="resetSandbox" type="button" title="Відновити приклад" aria-label="Відновити приклад">↺</button></div>
+                        <label class="visually-hidden" for="sandboxEditor">Код для пісочниці</label>
+                        <div class="code-area sandbox-code-area"><span class="line-numbers" id="sandboxLineNumbers" aria-hidden="true">1</span><textarea id="sandboxEditor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Код для пісочниці"></textarea></div>
+                        <div class="editor-footer"><span><span class="editor-status-dot"></span><span id="sandboxLanguageLabel">HTML</span></span><button class="run-button" id="runSandbox" type="button" aria-keyshortcuts="Control+Enter"><span aria-hidden="true">▶</span> Запустити й перевірити</button></div>
+                    </div>
+                    <div class="sandbox-output">
+                        <div class="output-heading"><strong id="outputTitle">Попередній перегляд</strong><span class="output-live"><i></i> результат</span></div>
+                        <iframe id="sandboxPreview" title="Результат виконання коду" sandbox="allow-scripts"></iframe>
+                        <pre id="sandboxConsole" aria-live="polite" hidden></pre>
+                    </div>
+                </div>
+                <p class="sandbox-hint" id="sandboxHint">Зміни приклад і натисни «Запустити й перевірити», щоб побачити результат.</p>
+                <button class="next-lesson" id="nextLesson" type="button" hidden>Наступний урок <span aria-hidden="true">→</span></button>
+            </section>
+
+            <section class="practice-section" id="practice" aria-labelledby="practiceTitle">
+                <div class="practice-heading"><div><p class="eyebrow">МІНІ-ПРАКТИКА</p><h2 id="practiceTitle">Закріпи знання</h2></div><span class="practice-level">Завдання 01 <span>·</span> легке</span></div>
+                <div class="practice-panel">
+                    <div class="challenge-copy"><span class="challenge-number" id="challengeNumber">01</span><h3 id="challengeTitle">Hello, World!</h3><div class="lesson-teaching"><p class="lesson-explanation" id="lessonExplanation"></p><div class="lesson-example"><div class="lesson-example-top"><span>Приклад</span><span id="lessonExampleLabel"></span></div><pre><code id="lessonExample"></code></pre></div><p class="lesson-example-result" id="lessonExampleResult"></p></div><p class="task-label">ТВОЄ ЗАВДАННЯ</p><p id="challengePrompt">Запусти першу програму й подивись на результат.</p><div class="lesson-tools"><button id="showHint" type="button">Підказка</button><button id="showSolution" type="button" disabled>Рішення</button></div><p class="lesson-hint" id="lessonHint" hidden></p><pre class="lesson-solution" id="lessonSolution" hidden></pre><div class="test-list"><span>✓</span> Перевірка результату</div><div class="feedback" id="feedback" role="status" aria-live="polite">Запусти код, щоб перевірити завдання.</div></div>
+                    <div class="editor-wrap"><div class="editor-topbar"><div class="window-dots"><i></i><i></i><i></i></div><span id="editorFilename">script.js</span><button class="reset-button" id="resetCode" type="button" title="Відновити початковий код" aria-label="Відновити початковий код">↺</button></div><label class="visually-hidden" for="codeEditor">Редактор коду</label><div class="code-area"><span class="line-numbers" id="lineNumbers" aria-hidden="true">1<br>2<br>3</span><textarea id="codeEditor" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Редактор коду"></textarea></div><div class="editor-footer"><span><span class="editor-status-dot"></span> JavaScript</span><button class="run-button" id="checkCode" type="button" aria-keyshortcuts="Control+Enter"><span aria-hidden="true">▶</span> Перевірити</button></div></div>
+                </div>
+            </section>
+
+            <footer class="page-footer"><span>feler<span class="brand-dot">.</span> <span class="footer-note">Навчайся. Створюй. Повторюй.</span></span><a href="#home">Нагору ↑</a></footer>
+        </main>
+    </div>
+</body>
+</html>
