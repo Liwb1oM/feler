@@ -560,6 +560,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 	const accountPassword = document.querySelector("#accountPassword");
 	const accountSignIn = document.querySelector("#accountSignIn");
 	const accountSignUp = document.querySelector("#accountSignUp");
+	const accountResend = document.querySelector("#accountResend");
 	const accountSignOut = document.querySelector("#accountSignOut");
 	const supabaseConfig = window.FELER_SUPABASE_CONFIG;
 	let supabaseClient = null;
@@ -679,6 +680,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountPassword.disabled = Boolean(user);
 		accountSignIn.hidden = Boolean(user);
 		accountSignUp.hidden = Boolean(user);
+		accountResend.hidden = !supabaseClient || Boolean(user);
 		accountSignOut.hidden = !user;
 		accountSignIn.disabled = !supabaseClient || Boolean(user);
 		accountSignUp.disabled = !supabaseClient || Boolean(user);
@@ -784,6 +786,13 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		return true;
 	}
 
+	function getEmailRedirectUrl() {
+		const redirectUrl = new URL(window.location.href);
+		redirectUrl.search = "";
+		redirectUrl.hash = "";
+		return redirectUrl.href;
+	}
+
 	async function signIn() {
 		if (!supabaseClient || !validateAccountForm()) return;
 		accountSignIn.disabled = true;
@@ -793,7 +802,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				email: accountEmail.value.trim(),
 				password: accountPassword.value
 			});
-			if (error) setAccountStatus(`Не вдалося увійти: ${error.message}`, true);
+			if (error?.message === "Invalid login credentials") {
+				setAccountStatus("Email або пароль неправильні. Якщо ти щойно реєструвався, надішли лист підтвердження ще раз і перевір папки «Спам» та «Промоакції».", true);
+			} else if (error) setAccountStatus(`Не вдалося увійти: ${error.message}`, true);
 			else accountPassword.value = "";
 		} catch (error) {
 			setAccountStatus(`Не вдалося увійти: ${error.message}`, true);
@@ -807,15 +818,12 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountSignUp.disabled = true;
 		setAccountStatus("Створюю акаунт…");
 		try {
-			const emailRedirectUrl = new URL(window.location.href);
-			emailRedirectUrl.search = "";
-			emailRedirectUrl.hash = "";
 			const { data, error } = await supabaseClient.auth.signUp({
 				email: accountEmail.value.trim(),
 				password: accountPassword.value,
 				options: {
 					data: { display_name: accountDisplayName.value.trim() },
-					emailRedirectTo: emailRedirectUrl.href
+					emailRedirectTo: getEmailRedirectUrl()
 				}
 			});
 			if (error) {
@@ -824,11 +832,30 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			}
 			accountPassword.value = "";
 			if (data.session) setAccountStatus("Акаунт створено. Тепер прогрес синхронізується.");
-			else setAccountStatus("Акаунт створено. Перевір пошту й підтвердь email, щоб увійти.");
+			else setAccountStatus("Запит прийнято. Перевір пошту та папки «Спам» і «Промоакції». Якщо листа немає, скористайся кнопкою повторного надсилання нижче.");
 		} catch (error) {
 			setAccountStatus(`Не вдалося створити акаунт: ${error.message}`, true);
 		} finally {
 			accountSignUp.disabled = false;
+		}
+	}
+
+	async function resendConfirmation() {
+		if (!supabaseClient || !accountEmail.reportValidity()) return;
+		accountResend.disabled = true;
+		setAccountStatus("Надсилаю лист підтвердження…");
+		try {
+			const { error } = await supabaseClient.auth.resend({
+				type: "signup",
+				email: accountEmail.value.trim(),
+				options: { emailRedirectTo: getEmailRedirectUrl() }
+			});
+			if (error) setAccountStatus(`Не вдалося надіслати лист: ${error.message}`, true);
+			else setAccountStatus("Запит прийнято. Перевір пошту та папки «Спам» і «Промоакції». Якщо листа немає, перевір SMTP у налаштуваннях Supabase.");
+		} catch (error) {
+			setAccountStatus(`Не вдалося надіслати лист: ${error.message}`, true);
+		} finally {
+			accountResend.disabled = false;
 		}
 	}
 
@@ -1376,6 +1403,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		document.querySelector("#accountForm").addEventListener("submit", event => event.preventDefault());
 		accountSignIn.addEventListener("click", signIn);
 		accountSignUp.addEventListener("click", signUp);
+		accountResend.addEventListener("click", resendConfirmation);
 		accountSignOut.addEventListener("click", async () => {
 			accountSignOut.disabled = true;
 			try {
