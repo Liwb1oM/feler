@@ -807,10 +807,16 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountSignUp.disabled = true;
 		setAccountStatus("Створюю акаунт…");
 		try {
+			const emailRedirectUrl = new URL(window.location.href);
+			emailRedirectUrl.search = "";
+			emailRedirectUrl.hash = "";
 			const { data, error } = await supabaseClient.auth.signUp({
 				email: accountEmail.value.trim(),
 				password: accountPassword.value,
-				options: { data: { display_name: accountDisplayName.value.trim() } }
+				options: {
+					data: { display_name: accountDisplayName.value.trim() },
+					emailRedirectTo: emailRedirectUrl.href
+				}
 			});
 			if (error) {
 				setAccountStatus(`Не вдалося створити акаунт: ${error.message}`, true);
