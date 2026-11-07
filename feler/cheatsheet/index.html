@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Feler Cheatsheet</title>
+    <meta
+      name="description"
+      content="Шпаргалка для початківців: HTML, CSS, JavaScript, TypeScript, React, Python, FastAPI, Django, Go, C#, SQL та інструменти."
+    />
+    <meta name="theme-color" content="#0f172a" />
+    <link rel="icon" href="./icons/icon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./css/styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#content" data-i18n="skip">Перейти до змісту</a>
+
+    <header class="topbar">
+      <div class="topbar__row">
+        <a class="brand" href="#html" aria-label="Feler Cheatsheet">
+          <span class="brand__logo" aria-hidden="true">&lt;/&gt;</span>
+          <span class="brand__name">Feler Cheatsheet</span>
+        </a>
+
+        <div class="topbar__actions">
+          <a class="btn btn--ghost" href="../#home" data-i18n="backToFeler">← До Feler</a>
+          <div class="seg" role="group" aria-label="Language">
+            <button type="button" class="seg__btn" data-lang="uk" aria-pressed="true">UA</button>
+            <button type="button" class="seg__btn" data-lang="en" aria-pressed="false">EN</button>
+          </div>
+          <button
+            id="theme"
+            class="btn btn--icon"
+            type="button"
+            aria-label="Toggle theme"
+            title="Toggle theme"
+          >
+            <span aria-hidden="true">🌓</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="search">
+        <input
+          id="search"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          data-i18n-placeholder="search"
+          placeholder="Пошук: flex, useEffect, SELECT…"
+          aria-label="Search"
+        />
+      </div>
+
+      <nav id="nav" class="nav" aria-label="Topics"></nav>
+    </header>
+
+    <main id="content" class="content" tabindex="-1"></main>
+
+    <footer class="footer">
+      <span data-i18n="footer">Зроблено для тих, хто тільки починає програмувати.</span>
+    </footer>
+
+    <noscript>
+      <p style="padding: 1rem">Для роботи шпаргалки потрібен JavaScript. / JavaScript is required.</p>
+    </noscript>
+
+    <!-- Звичайні скрипти (не модулі), щоб працювало навіть при відкритті файлу двома кліками -->
+    <script src="./js/data/html.js"></script>
+    <script src="./js/data/css.js"></script>
+    <script src="./js/data/tailwind.js"></script>
+    <script src="./js/data/javascript.js"></script>
+    <script src="./js/data/typescript.js"></script>
+    <script src="./js/data/react.js"></script>
+    <script src="./js/data/python.js"></script>
+    <script src="./js/data/fastapi.js"></script>
+    <script src="./js/data/django.js"></script>
+    <script src="./js/data/go.js"></script>
+    <script src="./js/data/csharp.js"></script>
+    <script src="./js/data/sql.js"></script>
+    <script src="./js/data/tools.js"></script>
+    <script src="./js/i18n.js"></script>
+    <script src="./js/highlight.js?v=2"></script>
+    <script src="./js/app.js"></script>
+  </body>
+</html>
