@@ -22,6 +22,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/go/go.min.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" defer></script>
     <script src="supabase-config.js" defer></script>
+    <script src="app-i18n.js" defer></script>
     <script src="scvirt.js" defer></script>
 </head>
 <body>
@@ -32,21 +33,23 @@
             </a>
             <p class="nav-caption">НАВЧАННЯ</p>
             <nav class="side-nav">
-                <a class="nav-link is-active" href="#languageGate" id="navLanguages"><span class="nav-icon">⌘</span>Мови</a>
-                <a class="nav-link" href="#lessonRail" id="navRoute"><span class="nav-icon">▤</span>Мій маршрут</a>
-                <a class="nav-link" href="#sandbox" id="navSandbox"><span class="nav-icon">▶</span>Пісочниця</a>
-                <a class="nav-link" href="./cheatsheet/" id="navCheatsheet"><span class="nav-icon">⌕</span>Шпаргалка</a>
+                <a class="nav-link is-active" href="#languageGate" id="navLanguages" data-i18n-tail="languages"><span class="nav-icon">⌘</span>Мови</a>
+                <a class="nav-link" href="#lessonRail" id="navRoute" data-i18n-tail="journey"><span class="nav-icon">▤</span>Мій маршрут</a>
+                <a class="nav-link" href="#sandbox" id="navSandbox" data-i18n-tail="sandbox"><span class="nav-icon">▶</span>Пісочниця</a>
+                <a class="nav-link" href="./cheatsheet/" id="navCheatsheet" data-i18n-tail="cheatsheet"><span class="nav-icon">⌕</span>Шпаргалка</a>
             </nav>
             <div class="sidebar-course">
-                <span class="mini-label">ТВОЯ ЦІЛЬ</span>
+                <span class="mini-label" data-i18n="goalLabel">ТВОЯ ЦІЛЬ</span>
                 <div class="goal-row"><span>Основи вебу</span><span id="sidebarProgress">0%</span></div>
                 <div class="progress-track"><span id="sidebarProgressBar"></span></div>
                 <p>Ще трохи — і перший проєкт готовий.</p>
             </div>
             <div class="sidebar-bottom">
-                <div class="avatar">М</div>
-                <div><strong id="sidebarDisplayName">Майбутній розробник</strong><span id="sidebarAccountLabel">Гостьовий прогрес</span></div>
-                <span class="more-icon" aria-hidden="true">···</span>
+                <button class="profile-launcher" id="profileButton" type="button" aria-label="Відкрити профіль">
+                    <span class="avatar" id="profileAvatar" aria-hidden="true"></span>
+                    <span class="profile-identity"><strong id="sidebarDisplayName">Користувач</strong><span id="sidebarAccountLabel">Гостьовий прогрес</span></span>
+                    <span class="more-icon" aria-hidden="true">···</span>
+                </button>
             </div>
         </aside>
 
@@ -54,39 +57,82 @@
             <header class="topbar">
                 <div class="breadcrumb"><span>Feler</span><span class="crumb-slash">/</span><strong id="breadcrumbLabel">Обери мову</strong></div>
                 <div class="topbar-actions">
-                    <span class="streak"><span aria-hidden="true">✦</span> <strong id="streakCount">0</strong> днів поспіль</span>
+                    <span class="streak"><span aria-hidden="true">✦</span> <strong id="streakCount">0</strong> <span data-i18n="streakLabel">днів поспіль</span></span>
+                    <label class="site-language-picker"><span class="visually-hidden" data-i18n="interfaceLanguage">Мова інтерфейсу</span>
+                        <select id="siteLanguage" aria-label="Мова інтерфейсу">
+                            <option value="uk">Українська</option>
+                            <option value="en">English</option>
+                        </select>
+                    </label>
+                    <button class="profile-quick-button" id="profileQuickButton" type="button" aria-label="Відкрити профіль">⚙</button>
                     <button class="change-language account-button" id="accountButton" type="button">Увійти / створити акаунт</button>
-                    <button class="change-language" id="changeLanguage" type="button">Змінити мову</button>
+                    <button class="change-language" id="changeLanguage" type="button" data-i18n="changeTrack">Змінити мову</button>
                 </div>
             </header>
 
             <section class="language-gate" id="languageGate" aria-labelledby="languageTitle">
                 <div class="language-intro">
                     <div>
-                        <p class="eyebrow"><span class="status-dot"></span> ТВОЯ НАВЧАЛЬНА МАЙСТЕРНЯ</p>
-                        <h1 id="languageTitle">Що будемо створювати?</h1>
-                        <p>Обери мову або технологію. Почнемо з <code>Hello, World!</code> і одразу перейдемо до коду.</p>
+                        <p class="eyebrow"><span class="status-dot"></span> <span data-i18n="gateEyebrow">ТВОЯ НАВЧАЛЬНА МАЙСТЕРНЯ</span></p>
+                        <h1 id="languageTitle" data-i18n="gateTitle">Що будемо створювати?</h1>
+                        <p data-i18n="gateIntro">Обери мову або технологію. Почнемо з <code>Hello, World!</code> і одразу перейдемо до коду.</p>
                     </div>
                     <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=720&q=80" alt="Ноутбук із кодом на екрані" loading="lazy">
                 </div>
                 <div class="track-filters" role="group" aria-label="Фільтри навчальних маршрутів">
-                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="trackSearch" type="search" placeholder="Знайти мову або тему" aria-label="Знайти мову або тему"></label>
-                    <label class="track-filter">Тема<select id="trackTopic"><option value="all">Усі теми</option><option value="web">Веб</option><option value="backend">Бекенд</option><option value="data">Дані</option><option value="logic">Логіка</option></select></label>
-                    <label class="track-filter">Рівень<select id="trackLevel"><option value="all">Будь-який</option><option value="beginner">Початковий</option><option value="intermediate">Середній</option></select></label>
-                    <label class="track-filter">Тривалість<select id="trackDuration"><option value="all">Будь-яка</option><option value="short">До 30 хв</option><option value="long">Понад 30 хв</option></select></label>
+                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="trackSearch" type="search" data-i18n-placeholder="routeSearch" placeholder="Знайти мову або тему" aria-label="Знайти мову або тему"></label>
+                    <label class="track-filter"><span data-i18n="topicFilter">Тема</span><select id="trackTopic"><option value="all" data-i18n="allTopics">Усі теми</option><option value="web" data-i18n="webTopic">Веб</option><option value="backend" data-i18n="backendTopic">Бекенд</option><option value="data" data-i18n="dataTopic">Дані</option><option value="logic" data-i18n="logicTopic">Логіка</option></select></label>
+                    <label class="track-filter"><span data-i18n="levelFilter">Рівень</span><select id="trackLevel"><option value="all" data-i18n="anyLevel">Будь-який</option><option value="beginner" data-i18n="beginnerLevel">Початковий</option><option value="intermediate" data-i18n="intermediateLevel">Середній</option></select></label>
+                    <label class="track-filter"><span data-i18n="durationFilter">Тривалість</span><select id="trackDuration"><option value="all" data-i18n="anyDuration">Будь-яка</option><option value="short" data-i18n="under30">До 30 хв</option><option value="long" data-i18n="over30">Понад 30 хв</option></select></label>
                 </div>
                 <div class="track-grid" id="trackGrid">
-                    <button class="track-card track-js" type="button" data-track-choice="javascript" data-topic="web logic" data-level="beginner" data-time="35" data-search="javascript js веб логіка інтерактив"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=js&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">JS</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>JavaScript</strong><span class="track-description">Додавай поведінку й інтерактивність сайтам.</span><span class="track-meta">4 уроки <i></i> 35 хв <i></i> Початковий</span></button>
-                    <button class="track-card track-python" type="button" data-track-choice="python" data-topic="data logic" data-level="beginner" data-time="40" data-search="python автоматизація дані логіка"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=python&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">Py</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ЛОГІКА</span><strong>Python</strong><span class="track-description">Почни з команд, змінних і невеликих програм.</span><span class="track-meta">4 уроки <i></i> 40 хв <i></i> Початковий</span></button>
-                    <button class="track-card track-typescript" type="button" data-track-choice="typescript" data-topic="web logic" data-level="intermediate" data-time="45" data-search="typescript ts веб типи"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=ts&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">TS</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>TypeScript</strong><span class="track-description">Додавай типи й надійність до JavaScript.</span><span class="track-meta">4 уроки <i></i> 45 хв <i></i> Середній</span></button>
+                    <button class="track-card track-js" type="button" data-track-choice="javascript" data-topic="web logic" data-level="beginner" data-time="45" data-search="javascript js веб логіка інтерактив об'єкти класи"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=js&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">JS</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>JavaScript</strong><span class="track-description">Додавай поведінку й інтерактивність сайтам.</span><span class="track-meta">5 уроків <i></i> 45 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-python" type="button" data-track-choice="python" data-topic="data logic" data-level="beginner" data-time="50" data-search="python автоматизація дані логіка об'єкти класи"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=python&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">Py</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ЛОГІКА</span><strong>Python</strong><span class="track-description">Почни з команд, змінних і невеликих програм.</span><span class="track-meta">5 уроків <i></i> 50 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-typescript" type="button" data-track-choice="typescript" data-topic="web logic" data-level="intermediate" data-time="55" data-search="typescript ts веб типи класи об'єкти"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=ts&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">TS</span></span></span><span class="track-category">ПРОГРАМУВАННЯ · ВЕБ</span><strong>TypeScript</strong><span class="track-description">Додавай типи й надійність до JavaScript.</span><span class="track-meta">5 уроків <i></i> 55 хв <i></i> Середній</span></button>
                     <button class="track-card track-sql" type="button" data-track-choice="sql" data-topic="data" data-level="beginner" data-time="30" data-search="sql база даних запити"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=postgres&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">SQL</span></span></span><span class="track-category">ДАНІ · БАЗИ ДАНИХ</span><strong>SQL</strong><span class="track-description">Отримуй відповіді з таблиць за допомогою запитів.</span><span class="track-meta">4 уроки <i></i> 30 хв <i></i> Початковий</span></button>
                     <button class="track-card track-html" type="button" data-track-choice="html" data-topic="web" data-level="beginner" data-time="25" data-search="html розмітка структура веб"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=html&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">&lt;/&gt;</span></span></span><span class="track-category">ВЕБ · РОЗМІТКА</span><strong>HTML</strong><span class="track-description">Створюй структуру сторінок і додавай зміст.</span><span class="track-meta">4 уроки <i></i> 25 хв <i></i> Початковий</span></button>
                     <button class="track-card track-css" type="button" data-track-choice="css" data-topic="web" data-level="beginner" data-time="25" data-search="css стилі дизайн веб"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=css&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">#</span></span></span><span class="track-category">ВЕБ · СТИЛІ</span><strong>CSS</strong><span class="track-description">Оформлюй сторінки кольорами, сітками та стилями.</span><span class="track-meta">4 уроки <i></i> 25 хв <i></i> Початковий</span></button>
                     <button class="track-card track-fastapi" type="button" data-track-choice="fastapi" data-topic="backend data logic" data-level="intermediate" data-time="80" data-search="fastapi django python бекенд api сервер"><span class="track-symbol track-symbol--pair"><span class="track-brand"><img src="https://skillicons.dev/icons?i=fastapi&amp;theme=dark" alt="" width="26" height="26" loading="lazy" decoding="async"><span class="track-symbol-label">API</span></span><span class="track-brand"><img src="https://skillicons.dev/icons?i=django&amp;theme=dark" alt="" width="26" height="26" loading="lazy" decoding="async"><span class="track-symbol-label">DJ</span></span></span><span class="track-category">БЕКЕНД · PYTHON</span><strong>FastAPI → Django</strong><span class="track-description">Спочатку легкий API, потім повний Django-проєкт.</span><span class="track-meta">8 уроків <i></i> 80 хв <i></i> Початковий → середній</span></button>
-                    <button class="track-card track-csharp" type="button" data-track-choice="csharp" data-topic="backend logic data" data-level="beginner" data-time="40" data-search="c# csharp dotnet бекенд програмування"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=cs&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">C#</span></span></span><span class="track-category">БЕКЕНД · .NET</span><strong>C#</strong><span class="track-description">Вивчи типи, методи й основи ASP.NET Core.</span><span class="track-meta">4 уроки <i></i> 40 хв <i></i> Початковий</span></button>
-                    <button class="track-card track-go" type="button" data-track-choice="go" data-topic="backend logic" data-level="beginner" data-time="40" data-search="go golang бекенд api конкурентність"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=go&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">Go</span></span></span><span class="track-category">БЕКЕНД · СЕРВЕРИ</span><strong>Go</strong><span class="track-description">Освой синтаксис Go, функції й HTTP-сервер.</span><span class="track-meta">4 уроки <i></i> 40 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-csharp" type="button" data-track-choice="csharp" data-topic="backend logic data" data-level="beginner" data-time="50" data-search="c# csharp dotnet бекенд програмування класи об'єкти"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=cs&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">C#</span></span></span><span class="track-category">БЕКЕНД · .NET</span><strong>C#</strong><span class="track-description">Вивчи типи, методи й основи ASP.NET Core.</span><span class="track-meta">5 уроків <i></i> 50 хв <i></i> Початковий</span></button>
+                    <button class="track-card track-go" type="button" data-track-choice="go" data-topic="backend logic" data-level="beginner" data-time="50" data-search="go golang бекенд api конкурентність struct interface"><span class="track-symbol"><span class="track-brand"><img src="https://skillicons.dev/icons?i=go&amp;theme=dark" alt="" width="30" height="30" loading="lazy" decoding="async"><span class="track-symbol-label">Go</span></span></span><span class="track-category">БЕКЕНД · СЕРВЕРИ</span><strong>Go</strong><span class="track-description">Освой синтаксис Go, функції й HTTP-сервер.</span><span class="track-meta">5 уроків <i></i> 50 хв <i></i> Початковий</span></button>
                 </div>
-                <p class="empty-state" id="emptyTracks" hidden>За цими фільтрами маршрутів не знайдено.</p>
+                <p class="empty-state" id="emptyTracks" data-i18n="emptyTracks" hidden>За цими фільтрами маршрутів не знайдено.</p>
+                <section class="study-plan-panel" aria-labelledby="studyPlanTitle">
+                    <div class="study-plan-copy">
+                        <p class="eyebrow" data-i18n="personalPlanEyebrow">ПЛАН ПІД ТЕБЕ</p>
+                        <h2 id="studyPlanTitle" data-i18n="personalPlanTitle">Навчайся у власному темпі</h2>
+                        <p id="studyPlanDescription">Обери мету в профілі — Feler запропонує маршрут і коротку щоденну ціль.</p>
+                    </div>
+                    <div class="study-plan-actions">
+                                <label for="studyGoal" data-i18n="goalLabel">ТВОЯ ЦІЛЬ</label>
+                        <select id="studyGoal">
+                                    <option value="web" data-i18n="studyGoalWeb">Створювати сайти</option>
+                                    <option value="backend" data-i18n="studyGoalBackend">Створювати API та сервери</option>
+                                    <option value="data" data-i18n="studyGoalData">Працювати з даними</option>
+                        </select>
+                        <button class="feature-button" id="startStudyPlan" type="button">Почати маршрут <span aria-hidden="true">↗</span></button>
+                    </div>
+                </section>
+                <section class="projects-panel" aria-labelledby="projectsTitle">
+                    <div class="section-heading"><div><p class="eyebrow" data-i18n="projectEyebrow">НАВЧАННЯ ЧЕРЕЗ ПРАКТИКУ</p><h2 id="projectsTitle" data-i18n="projectsTitle">Збери свій перший проєкт</h2></div></div>
+                    <div class="project-grid">
+                        <button class="project-card" type="button" data-project-track="html">
+                            <span class="project-number">01</span><strong data-i18n="projectProfileTitle">Картка портфоліо</strong>
+                            <span data-i18n="projectProfileDescription">Зроби власну сторінку профілю з описом і посиланнями.</span>
+                            <span class="project-link" data-i18n="projectStart">Почати мініпроєкт →</span>
+                        </button>
+                        <button class="project-card" type="button" data-project-track="javascript">
+                            <span class="project-number">02</span><strong data-i18n="projectFizzTitle">Гра FizzBuzz</strong>
+                            <span data-i18n="projectFizzDescription">Потренуй цикли й умови на маленькому завданні.</span>
+                            <span class="project-link" data-i18n="projectStart">Почати мініпроєкт →</span>
+                        </button>
+                        <button class="project-card" type="button" data-project-track="python">
+                            <span class="project-number">03</span><strong data-i18n="projectPythonTitle">Фільтр чисел на Python</strong>
+                            <span data-i18n="projectPythonDescription">Напиши програму, яка знаходить парні числа.</span>
+                            <span class="project-link" data-i18n="projectStart">Почати мініпроєкт →</span>
+                        </button>
+                    </div>
+                </section>
                 <section class="achievement-panel" aria-labelledby="achievementTitle">
                     <div class="section-heading"><div><p class="eyebrow">ТВОЇ ДОСЯГНЕННЯ</p><h2 id="achievementTitle">Маленькі кроки — великий прогрес</h2></div></div>
                     <div class="achievement-grid" id="achievementList" aria-live="polite"></div>
@@ -102,51 +148,51 @@
             <section class="welcome-row" aria-labelledby="welcomeTitle">
                 <div>
                     <p class="eyebrow"><span class="status-dot"></span> ТВОЯ НАВЧАЛЬНА МАЙСТЕРНЯ</p>
-                    <h1 id="welcomeTitle">Привіт, творцю<span class="heading-mark">.</span></h1>
-                    <p class="welcome-copy">Сьогодні — чудовий день, щоб написати перший рядок коду.</p>
+                    <h1 id="welcomeTitle" data-i18n-tail="welcomeTitle">Привіт, творцю<span class="heading-mark">.</span></h1>
+                    <p class="welcome-copy" data-i18n="welcomeCopy">Сьогодні — чудовий день, щоб написати перший рядок коду.</p>
                 </div>
                 <div class="date-chip"><span class="date-icon">◷</span><span id="todayLabel">Твій темп — твоя сила</span></div>
             </section>
 
             <section class="feature-banner" aria-labelledby="featureTitle">
                 <div class="feature-copy">
-                    <span class="feature-tag"><span class="tag-dot"></span> ПРОДОВЖУЙ НАВЧАННЯ</span>
-                    <h2 id="featureTitle">Веб починається<br>з <em>одного рядка.</em></h2>
-                    <p>Збери свій перший інтерактивний сайт — крок за кроком, без зайвої теорії.</p>
-                    <a class="feature-button" href="#courses">До уроків <span aria-hidden="true">↗</span></a>
+                    <span class="feature-tag"><span class="tag-dot"></span> <span data-i18n="featureTag">ПРОДОВЖУЙ НАВЧАННЯ</span></span>
+                    <h2 id="featureTitle"><span data-i18n="featureStart">Веб починається</span><br><span data-i18n="featureJoin">з</span> <em data-i18n="featureOneLine">одного рядка.</em></h2>
+                    <p data-i18n="featureDescription">Збери свій перший інтерактивний сайт — крок за кроком, без зайвої теорії.</p>
+                    <a class="feature-button" href="#courses" data-i18n-tail="featureButton">До уроків <span aria-hidden="true">↗</span></a>
                 </div>
                 <div class="feature-visual">
                     <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1100&q=85" alt="Робоче місце розробника з відкритим ноутбуком" loading="lazy">
-                    <div class="image-caption"><span class="caption-dot"></span> Твій наступний проєкт чекає</div>
+                    <div class="image-caption" data-i18n-tail="imageCaption"><span class="caption-dot"></span> Твій наступний проєкт чекає</div>
                     <div class="floating-code" aria-hidden="true"><span>01</span> &lt;hello world /&gt;</div>
                 </div>
             </section>
 
             <section class="directions-section" id="directions" aria-labelledby="directionsTitle">
                 <div class="section-heading directions-heading">
-                    <div><p class="eyebrow">ЗНАЙДИ СВІЙ ШЛЯХ</p><h2 id="directionsTitle">Куди веде код?</h2></div>
-                    <p class="directions-intro">Обери напрям — почати можна з нуля.</p>
+                    <div><p class="eyebrow" data-i18n="directionsEyebrow">ЗНАЙДИ СВІЙ ШЛЯХ</p><h2 id="directionsTitle" data-i18n="directionsTitle">Куди веде код?</h2></div>
+                    <p class="directions-intro" data-i18n="directionsIntro">Обери напрям — почати можна з нуля.</p>
                 </div>
                 <div class="direction-grid">
                     <a class="direction-card direction-frontend" href="#courses" data-direction="frontend">
                         <span class="direction-icon" aria-hidden="true">&lt;/&gt;</span>
-                        <span class="direction-kicker">01 · ІНТЕРФЕЙСИ</span>
-                        <strong>Фронтенд</strong>
-                        <span class="direction-description">Створюй сторінки, якими зручно користуватися.</span>
+                        <span class="direction-kicker" data-i18n="frontendKicker">01 · ІНТЕРФЕЙСИ</span>
+                        <strong data-i18n="frontend">Фронтенд</strong>
+                        <span class="direction-description" data-i18n="frontendDescription">Створюй сторінки, якими зручно користуватися.</span>
                         <span class="direction-languages">HTML <i></i> CSS <i></i> JavaScript</span>
                     </a>
                     <a class="direction-card direction-backend" href="#courses" data-direction="backend">
                         <span class="direction-icon" aria-hidden="true">{ }</span>
-                        <span class="direction-kicker">02 · СЕРВЕРИ Й ДАНІ</span>
-                        <strong>Бекенд</strong>
-                        <span class="direction-description">Розбирайся, як працюють API, сервери та бази даних.</span>
-                        <span class="direction-languages">FastAPI <i></i> C# <i></i> Node.js</span>
+                        <span class="direction-kicker" data-i18n="backendKicker">02 · СЕРВЕРИ Й ДАНІ</span>
+                        <strong data-i18n="backend">Бекенд</strong>
+                        <span class="direction-description" data-i18n="backendDescription">Розбирайся, як працюють API, сервери та бази даних.</span>
+                        <span class="direction-languages">FastAPI <i></i> Django <i></i> C#</span>
                     </a>
                     <a class="direction-card direction-python" href="#sandbox" data-direction="python">
                         <span class="direction-icon" aria-hidden="true">Py</span>
-                        <span class="direction-kicker">03 · АВТОМАТИЗАЦІЯ</span>
-                        <strong>Python і дані</strong>
-                        <span class="direction-description">Почни з простих програм і досліджуй дані.</span>
+                        <span class="direction-kicker" data-i18n="pythonKicker">03 · АВТОМАТИЗАЦІЯ</span>
+                        <strong data-i18n="pythonDirection">Python і дані</strong>
+                        <span class="direction-description" data-i18n="pythonDescription">Почни з простих програм і досліджуй дані.</span>
                         <span class="direction-languages">Python <i></i> алгоритми <i></i> дані</span>
                     </a>
                 </div>
@@ -154,16 +200,16 @@
 
             <section class="learning-section" id="courses" aria-labelledby="coursesTitle">
                 <div class="section-heading">
-                    <div><p class="eyebrow">МАРШРУТ НАВЧАННЯ</p><h2 id="coursesTitle">Обери наступний крок</h2></div>
-                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="courseSearch" type="search" placeholder="Знайти урок" aria-label="Знайти урок"></label>
+                    <div><p class="eyebrow" data-i18n="coursesEyebrow">МАРШРУТ НАВЧАННЯ</p><h2 id="coursesTitle" data-i18n="coursesTitle">Обери наступний крок</h2></div>
+                    <label class="search-box"><span aria-hidden="true">⌕</span><input id="courseSearch" type="search" data-i18n-placeholder="searchLesson" placeholder="Знайти урок" aria-label="Знайти урок"></label>
                 </div>
                 <div class="filter-row" role="group" aria-label="Фільтр уроків">
-                    <button class="filter-chip is-selected" type="button" data-filter="all">Усі теми <span>05</span></button>
-                    <button class="filter-chip" type="button" data-filter="frontend">Фронтенд</button>
+                    <button class="filter-chip is-selected" type="button" data-filter="all" data-i18n-tail="allLessons">Усі теми <span>05</span></button>
+                    <button class="filter-chip" type="button" data-filter="frontend" data-i18n="filterFrontend">Фронтенд</button>
                     <button class="filter-chip" type="button" data-filter="html">HTML</button>
                     <button class="filter-chip" type="button" data-filter="css">CSS</button>
                     <button class="filter-chip" type="button" data-filter="js">JavaScript</button>
-                    <button class="filter-chip" type="button" data-filter="backend">Бекенд</button>
+                    <button class="filter-chip" type="button" data-filter="backend" data-i18n="filterBackend">Бекенд</button>
                     <button class="filter-chip" type="button" data-filter="python">Python</button>
                 </div>
                 <div class="course-grid" id="courseGrid">
@@ -188,12 +234,12 @@
                         <div class="course-body"><div class="course-meta"><span class="course-type">PYTHON · ОСНОВИ</span><span class="course-time">12 хв</span></div><h3>Перші кроки з Python</h3><p>Змінні, виведення тексту та проста функція.</p><div class="course-footer"><span class="lesson-state" data-state="python">Ще не розпочато</span><button class="lesson-button" type="button" data-lesson="python" aria-label="Відкрити урок про Python">↗</button></div></div>
                     </article>
                 </div>
-                <p class="empty-state" id="emptyState" hidden>За цим запитом уроків не знайдено.</p>
+                <p class="empty-state" id="emptyState" data-i18n="emptyCourses" hidden>За цим запитом уроків не знайдено.</p>
             </section>
 
             <section class="sandbox-section" id="sandbox" aria-labelledby="sandboxTitle">
                 <div class="section-heading sandbox-heading">
-                    <div><p class="eyebrow" id="trackEyebrow">ТВІЙ МАРШРУТ</p><h2 id="sandboxTitle">Пісочниця коду</h2></div>
+                    <div><p class="eyebrow" id="trackEyebrow">ТВІЙ МАРШРУТ</p><h2 id="sandboxTitle" data-i18n="sandboxTitle">Пісочниця коду</h2></div>
                     <label class="language-picker">Мова
                         <select id="sandboxLanguage" aria-label="Мова програмування">
                             <option value="html">HTML</option>
@@ -246,6 +292,106 @@
             <footer class="page-footer"><span>feler<span class="brand-dot">.</span> <span class="footer-note">Навчайся. Створюй. Повторюй.</span></span><a href="#home">Нагору ↑</a></footer>
         </main>
     </div>
+    <dialog class="profile-dialog" id="profileDialog" aria-labelledby="profileTitle">
+        <form class="profile-form" id="profileForm">
+            <button class="account-close" id="profileClose" type="button" aria-label="Закрити">×</button>
+            <p class="eyebrow" data-i18n="profileEyebrow">ТВІЙ ПРОФІЛЬ</p>
+            <h2 id="profileTitle" data-i18n="profileTitle">Налаштуй Feler під себе</h2>
+            <p class="account-description" data-i18n="profileDescription">Переглядай свій навчальний прогрес і налаштуй щоденну ціль. Після входу профіль і прогрес зберігаються в акаунті.</p>
+            <div class="profile-account-summary">
+                <span class="avatar profile-avatar-large" id="profileModalAvatar" aria-hidden="true"></span>
+                <span><strong id="profileModalName">Користувач</strong><span id="profileEmail">Гостьовий режим</span></span>
+            </div>
+            <section class="profile-overview" aria-label="Навчальний прогрес">
+                <article><strong id="profileLessonsCount">0</strong><span data-i18n="profileLessonsStat">Уроків завершено</span></article>
+                <article><strong id="profileTracksCount">0</strong><span data-i18n="profileTracksStat">Маршрутів завершено</span></article>
+                <article><strong id="profileStreakCount">0</strong><span data-i18n="profileStreakStat">Днів поспіль</span></article>
+            </section>
+            <label for="profileName" data-i18n="profileNameLabel">Як до тебе звертатися</label>
+            <input id="profileName" maxlength="40" autocomplete="nickname" placeholder="Наприклад, Оля">
+            <section class="character-editor" aria-labelledby="characterEditorTitle">
+                <div class="character-editor-heading">
+                    <h3 id="characterEditorTitle" data-i18n="profileCharacterTitle">Створи свого персонажа</h3>
+                    <p data-i18n="profileCharacterHint">Налаштуй зовнішність — зміни одразу з'являться на аватарі.</p>
+                </div>
+                <div class="character-editor-grid">
+                    <label for="characterSkin" data-i18n="characterSkinLabel">Тон шкіри</label>
+                    <select id="characterSkin" data-character-part="skin">
+                        <option value="light" data-i18n="characterSkinLight">Світлий</option>
+                        <option value="medium" data-i18n="characterSkinMedium">Середній</option>
+                        <option value="deep" data-i18n="characterSkinDeep">Темний</option>
+                    </select>
+                    <label for="characterHair" data-i18n="characterHairLabel">Зачіска</label>
+                    <select id="characterHair" data-character-part="hair">
+                        <option value="short" data-i18n="characterHairShort">Коротка</option>
+                        <option value="curly" data-i18n="characterHairCurly">Кучерява</option>
+                        <option value="long" data-i18n="characterHairLong">Довга</option>
+                    </select>
+                    <label for="characterHairColor" data-i18n="characterHairColorLabel">Колір волосся</label>
+                    <select id="characterHairColor" data-character-part="hairColor">
+                        <option value="brown" data-i18n="characterHairBrown">Каштановий</option>
+                        <option value="black" data-i18n="characterHairBlack">Чорний</option>
+                        <option value="blonde" data-i18n="characterHairBlonde">Блонд</option>
+                        <option value="blue" data-i18n="characterHairBlue">Синій</option>
+                    </select>
+                    <label for="characterOutfit" data-i18n="characterOutfitLabel">Колір худі</label>
+                    <select id="characterOutfit" data-character-part="outfit">
+                        <option value="green" data-i18n="characterOutfitGreen">Зелений</option>
+                        <option value="blue" data-i18n="characterOutfitBlue">Синій</option>
+                        <option value="violet" data-i18n="characterOutfitViolet">Фіолетовий</option>
+                        <option value="coral" data-i18n="characterOutfitCoral">Кораловий</option>
+                    </select>
+                    <label for="characterAccessory" data-i18n="characterAccessoryLabel">Аксесуар</label>
+                    <select id="characterAccessory" data-character-part="accessory">
+                        <option value="none" data-i18n="characterAccessoryNone">Без аксесуара</option>
+                        <option value="glasses" data-i18n="characterAccessoryGlasses">Окуляри</option>
+                        <option value="headphones" data-i18n="characterAccessoryHeadphones">Навушники</option>
+                    </select>
+                </div>
+            </section>
+            <label for="profileGoal" data-i18n="profileGoalLabel">Що хочеш навчитися створювати?</label>
+            <select id="profileGoal">
+                <option value="web" data-i18n="profileGoalWeb">Сайти та інтерфейси</option>
+                <option value="backend" data-i18n="profileGoalBackend">API та сервери</option>
+                <option value="data" data-i18n="profileGoalData">Програми й робота з даними</option>
+            </select>
+            <label for="profileMinutes" data-i18n="profileMinutesLabel">Щоденна ціль</label>
+            <select id="profileMinutes">
+                <option value="10" data-i18n="minutes10">10 хвилин</option>
+                <option value="20" data-i18n="minutes20">20 хвилин</option>
+                <option value="30" data-i18n="minutes30">30 хвилин</option>
+            </select>
+            <label class="profile-toggle"><input id="profileDarkMode" type="checkbox"><span data-i18n="profileDarkMode">Темний режим</span></label>
+            <div class="account-actions"><button class="account-submit" id="saveProfile" type="submit" data-i18n="saveProfile">Зберегти налаштування</button></div>
+            <button class="account-signout" id="openAccountFromProfile" type="button" data-i18n="openAccount">Увійти / створити акаунт</button>
+            <p class="account-status" id="profileStatus" role="status" aria-live="polite"></p>
+        </form>
+    </dialog>
+    <template id="profileCharacterTemplate">
+        <svg class="profile-character" viewBox="0 0 96 96" aria-hidden="true">
+            <circle class="character-background" cx="48" cy="48" r="48"></circle>
+            <path class="character-outfit" d="M14 96c2-18 10-29 25-33l9 8 9-8c15 4 23 15 25 33z"></path>
+            <path class="character-neck character-skin" d="M39 57h18v17H39z"></path>
+            <path class="character-hair character-hair-back hair-long" d="M27 43c-3-18 7-30 21-30s24 12 21 30v34H57V51H39v26H27z"></path>
+            <ellipse class="character-ear character-skin" cx="29" cy="43" rx="4" ry="7"></ellipse>
+            <ellipse class="character-ear character-skin" cx="67" cy="43" rx="4" ry="7"></ellipse>
+            <ellipse class="character-face character-skin" cx="48" cy="41" rx="18" ry="22"></ellipse>
+            <path class="character-hair hair-short" d="M29 42c-2-17 7-28 19-28s21 11 19 28c-5-7-10-11-16-14-6 7-13 11-22 14z"></path>
+            <path class="character-hair hair-curly" d="M29 43c-5-4-3-13 3-15-2-7 5-12 11-10 3-7 14-7 17 0 8-2 14 4 12 11 5 4 4 11-1 15-5-5-10-9-14-15-7 7-16 12-28 14z"></path>
+            <path class="character-hair hair-long" d="M30 41c3-17 10-24 19-24 10 0 16 7 18 24-5-6-9-10-15-13-6 7-13 11-22 13z"></path>
+            <circle class="character-eye" cx="41" cy="43" r="1.7"></circle>
+            <circle class="character-eye" cx="55" cy="43" r="1.7"></circle>
+            <path class="character-mouth" d="M43 52c3 3 7 3 10 0"></path>
+            <path class="character-collar" d="m40 64 8 7 8-7" fill="none"></path>
+            <g class="character-accessory accessory-glasses">
+                <circle cx="41" cy="44" r="5.3"></circle><circle cx="55" cy="44" r="5.3"></circle><path d="M46.3 44h3.4M35.7 43.5 31 42M60.3 43.5 65 42"></path>
+            </g>
+            <g class="character-accessory accessory-headphones">
+                <path class="headphone-band" d="M29 43c0-25 38-25 38 0"></path>
+                <rect x="25" y="41" width="7" height="14" rx="3.5"></rect><rect x="64" y="41" width="7" height="14" rx="3.5"></rect>
+            </g>
+        </svg>
+    </template>
     <dialog class="account-dialog" id="accountDialog" aria-labelledby="accountTitle">
         <form class="account-form" id="accountForm">
             <button class="account-close" id="accountClose" type="button" aria-label="Закрити">×</button>

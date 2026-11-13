@@ -1,5 +1,4 @@
-/* Прості переклади інтерфейсу (UK / EN).
-   Контент шпаргалки лежить окремо — у js/data/*.js, поля { uk, en }. */
+/* Переклади інтерфейсу; контент шпаргалки зберігається окремо в js/data/*.js. */
 (function () {
   "use strict";
 
@@ -21,6 +20,8 @@
       notFound: "Розділ не знайдено",
       titleSuffix: "Feler Cheatsheet",
       themeToggle: "Змінити тему",
+      languageLabel: "Мова",
+      searchLabel: "Пошук по шпаргалці",
     },
     en: {
       skip: "Skip to content",
@@ -39,21 +40,26 @@
       notFound: "Section not found",
       titleSuffix: "Feler Cheatsheet",
       themeToggle: "Toggle theme",
+      languageLabel: "Language",
+      searchLabel: "Search the cheatsheet",
     },
   };
 
   var STORAGE_KEY = "cs:lang";
+  var SHARED_STORAGE_KEY = "feler-interface-language-v1";
   var lang = "uk";
 
   function detect() {
     try {
+      var shared = localStorage.getItem(SHARED_STORAGE_KEY);
+      if (shared === "uk" || shared === "en") return shared;
       var saved = localStorage.getItem(STORAGE_KEY);
       if (saved === "uk" || saved === "en") return saved;
     } catch (e) {
       /* localStorage може бути недоступний — це нормально */
     }
     var nav = (navigator.language || "uk").toLowerCase();
-    return nav.indexOf("uk") === 0 ? "uk" : "en";
+    return nav.indexOf("en") === 0 ? "en" : "uk";
   }
 
   lang = detect();
@@ -67,6 +73,7 @@
       lang = next;
       try {
         localStorage.setItem(STORAGE_KEY, next);
+        localStorage.setItem(SHARED_STORAGE_KEY, next);
       } catch (e) {
         /* ignore */
       }
@@ -95,6 +102,11 @@
       for (i = 0; i < ph.length; i++) {
         el = ph[i];
         el.setAttribute("placeholder", I18N.t(el.getAttribute("data-i18n-placeholder")));
+      }
+      var aria = document.querySelectorAll("[data-i18n-aria]");
+      for (i = 0; i < aria.length; i++) {
+        el = aria[i];
+        el.setAttribute("aria-label", I18N.t(el.getAttribute("data-i18n-aria")));
       }
       var themeBtn = document.getElementById("theme");
       if (themeBtn) {

@@ -94,7 +94,7 @@ function updateProgressView() {
 
 	document.querySelectorAll("[data-state]").forEach(state => {
 		const completed = progress.completed.includes(state.dataset.state);
-		state.textContent = completed ? "Урок завершено" : "Ще не розпочато";
+		state.textContent = completed ? window.FelerI18n.t("lessonDone") : window.FelerI18n.t("lessonNotStarted");
 		state.classList.toggle("is-done", completed);
 	});
 }
@@ -133,11 +133,18 @@ function updateVisitStreak() {
 	}
 }
 
-document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat("uk-UA", {
-	weekday: "long",
-	day: "numeric",
-	month: "long"
-}).format(new Date());
+function updateTodayLabel() {
+	document.querySelector("#todayLabel").textContent = new Intl.DateTimeFormat({
+		uk: "uk-UA",
+		en: "en-US",
+	}[window.FelerI18n.language], {
+		weekday: "long",
+		day: "numeric",
+		month: "long"
+	}).format(new Date());
+}
+
+updateTodayLabel();
 
 updateVisitStreak();
 updateProgressView();
@@ -409,6 +416,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				{ id: "hello", title: "Hello, World!", task: "Запусти першу програму та побач відповідь у консолі.", filename: "hello.js", starter: "console.log('Hello, World!');", expected: "Hello, World!", hint: "console.log() виводить повідомлення в консоль.", solution: "console.log('Hello, World!');" },
 				{ id: "variables", title: "Змінні та повідомлення", task: "Збережи ім'я у змінній name й привітай Ada.", filename: "greeting.js", starter: "const name = 'Ada';\nconsole.log(`Hello, ${name}!`);", expected: "Hello, Ada!", hint: "Встав значення name у шаблонний рядок за допомогою ${name}.", solution: "const name = 'Ada';\nconsole.log(`Hello, ${name}!`);" },
 				{ id: "functions", title: "Функції й перевірки", task: "Виправ double: поверни подвоєне число для обох тестових значень.", filename: "double.js", starter: "function double(number) {\n  return number;\n}\n\nconsole.log(double(6));\nconsole.log(double(-3));", expected: "12\n-6", hint: "Помнож number на 2 перед тим, як повернути результат.", solution: "function double(number) {\n  return number * 2;\n}\n\nconsole.log(double(6));\nconsole.log(double(-3));" },
+				{ id: "oop", title: "Класи та об'єкти", task: "Створи клас Student з конструктором і методом greet(), щоб вивести Hello, Ada!.", filename: "student.js", starter: "class Student {\n  constructor(name) {\n    this.name = name;\n  }\n\n  // Додай метод greet()\n}\n\nconst student = new Student('Ada');\nconsole.log(student.greet());", expected: "Hello, Ada!", hint: "Конструктор зберігає ім'я в об'єкті, а метод використовує this.name.", solution: "class Student {\n  constructor(name) {\n    this.name = name;\n  }\n\n  greet() {\n    return `Hello, ${this.name}!`;\n  }\n}\n\nconst student = new Student('Ada');\nconsole.log(student.greet());" },
 				{ id: "project", title: "Проєкт: FizzBuzz", task: "Виведи числа від 1 до 15. Для кратних 3 виводь Fizz, для 5 — Buzz, для обох — FizzBuzz.", filename: "fizzbuzz.js", starter: "for (let number = 1; number <= 15; number++) {\n  console.log(number);\n}", expected: fizzBuzzOutput, hint: "Спочатку перевір кратність і 3, і 5; потім окремо 3 та 5.", solution: "for (let number = 1; number <= 15; number++) {\n  if (number % 15 === 0) console.log('FizzBuzz');\n  else if (number % 3 === 0) console.log('Fizz');\n  else if (number % 5 === 0) console.log('Buzz');\n  else console.log(number);\n}" , project: true }
 			]
 		},
@@ -417,6 +425,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				{ id: "hello", title: "Hello, World!", task: "Запусти першу програму та побач відповідь у консолі.", filename: "hello.py", starter: "print('Hello, World!')", expected: "Hello, World!", hint: "Функція print() виводить текст у консоль.", solution: "print('Hello, World!')" },
 				{ id: "variables", title: "Змінні та повідомлення", task: "Збережи ім'я у змінній name й привітай Ada.", filename: "greeting.py", starter: "name = 'Ada'\nprint(f'Hello, {name}!')", expected: "Hello, Ada!", hint: "Префікс f перед рядком дає змогу вставити значення як {name}.", solution: "name = 'Ada'\nprint(f'Hello, {name}!')" },
 				{ id: "functions", title: "Функції й перевірки", task: "Виправ double: поверни подвоєне число для обох тестових значень.", filename: "double.py", starter: "def double(number):\n    return number\n\nprint(double(6))\nprint(double(-3))", expected: "12\n-6", hint: "Помнож number на 2 у виразі після return.", solution: "def double(number):\n    return number * 2\n\nprint(double(6))\nprint(double(-3))" },
+				{ id: "oop", title: "Класи та об'єкти", task: "Створи клас Student з конструктором та методом greet(), щоб вивести Hello, Ada!.", filename: "student.py", starter: "class Student:\n    def __init__(self, name):\n        self.name = name\n\n    # Додай метод greet\n\nstudent = Student('Ada')\nprint(student.greet())", expected: "Hello, Ada!", hint: "__init__ задає стан нового об'єкта, а self.name зберігає його ім'я.", solution: "class Student:\n    def __init__(self, name):\n        self.name = name\n\n    def greet(self):\n        return f'Hello, {self.name}!'\n\nstudent = Student('Ada')\nprint(student.greet())" },
 				{ id: "project", title: "Проєкт: парні числа", task: "Пройдися циклом по списку й виведи лише парні числа.", filename: "even_numbers.py", starter: "numbers = [1, 2, 3, 4, 5, 6]\n\nfor number in numbers:\n    print(number)", expected: "2\n4\n6", hint: "Остача від ділення парного числа на 2 дорівнює нулю.", solution: "numbers = [1, 2, 3, 4, 5, 6]\n\nfor number in numbers:\n    if number % 2 == 0:\n        print(number)", project: true }
 			]
 		},
@@ -425,6 +434,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				{ id: "hello", title: "Hello, World!", task: "Запусти TypeScript-програму та перевір її вивід.", filename: "hello.ts", starter: "console.log('Hello, World!');", expected: "Hello, World!", hint: "TypeScript-код компілюється в JavaScript, а потім запускається.", solution: "console.log('Hello, World!');" },
 				{ id: "variables", title: "Типізовані змінні", task: "Оголоси name як рядок і привітай Ada.", filename: "greeting.ts", starter: "const name: string = 'Ada';\nconsole.log(`Hello, ${name}!`);", expected: "Hello, Ada!", hint: "Для тексту використовуй тип string.", solution: "const name: string = 'Ada';\nconsole.log(`Hello, ${name}!`);" },
 				{ id: "functions", title: "Типізовані функції", task: "Виправ double, щоб обидва результати відповідали тестам.", filename: "double.ts", starter: "function double(number: number): number {\n  return number;\n}\n\nconsole.log(double(6));\nconsole.log(double(-3));", expected: "12\n-6", hint: "Тип number задає тип аргументу й результату; помнож аргумент на 2.", solution: "function double(number: number): number {\n  return number * 2;\n}\n\nconsole.log(double(6));\nconsole.log(double(-3));" },
+				{ id: "oop", title: "Класи та типи", task: "Створи типізований клас Student з конструктором і методом greet(), щоб вивести Hello, Ada!.", filename: "student.ts", starter: "class Student {\n  name: string;\n\n  constructor(name: string) {\n    this.name = name;\n  }\n\n  // Додай типізований метод greet()\n}\n\nconst student = new Student('Ada');\nconsole.log(student.greet());", expected: "Hello, Ada!", hint: "Вкажи тип string для результату методу та використай this.name.", solution: "class Student {\n  name: string;\n\n  constructor(name: string) {\n    this.name = name;\n  }\n\n  greet(): string {\n    return `Hello, ${this.name}!`;\n  }\n}\n\nconst student = new Student('Ada');\nconsole.log(student.greet());" },
 				{ id: "project", title: "Проєкт: парні числа", task: "Використай типізований список чисел і виведи лише парні.", filename: "even_numbers.ts", starter: "const numbers: number[] = [1, 2, 3, 4, 5, 6];\n\nfor (const number of numbers) {\n  console.log(number);\n}", expected: "2\n4\n6", hint: "Умова number % 2 === 0 залишає парні значення.", solution: "const numbers: number[] = [1, 2, 3, 4, 5, 6];\n\nfor (const number of numbers) {\n  if (number % 2 === 0) console.log(number);\n}", project: true }
 			]
 		},
@@ -473,6 +483,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				{ id: "hello", title: "Перший рядок у C#", task: "Виведи Hello, World! у консоль.", filename: "Program.cs", starter: "// Додай Console.WriteLine(...);", checks: [{ label: "Є виклик Console.WriteLine", pattern: "Console\\s*\\.\\s*WriteLine\\s*\\(" }, { label: "Виводиться Hello, World!", pattern: "Console\\s*\\.\\s*WriteLine\\s*\\(\\s*[\"']Hello, World![\"']\\s*\\)" }], hint: "Console.WriteLine друкує рядок і переходить на новий рядок.", solution: "Console.WriteLine(\"Hello, World!\");" },
 				{ id: "variables", title: "Змінні та типи", task: "Оголоси рядкову змінну name зі значенням Ada і привітай її.", filename: "Program.cs", starter: "string name = \"Ada\";\n// Виведи привітання", checks: [{ label: "Оголошено рядок name", pattern: "string\\s+name\\s*=\\s*[\"']Ada[\"']" }, { label: "Ім'я використано у виводі", pattern: "Console\\s*\\.\\s*WriteLine\\s*\\([^;]*name" }], hint: "Інтерполяція рядків C# починається з $ перед лапками: $\"Hello, {name}!\".", solution: "string name = \"Ada\";\nConsole.WriteLine($\"Hello, {name}!\");" },
 				{ id: "functions", title: "Методи й повернення", task: "Напиши метод Double, який повертає подвоєне число, і виклич його.", filename: "Program.cs", starter: "static int Double(int number)\n{\n    // Поверни number * 2\n}\n\nConsole.WriteLine(Double(6));", checks: [{ label: "Метод приймає int", pattern: "static\\s+int\\s+Double\\s*\\(\\s*int\\s+number\\s*\\)" }, { label: "Метод повертає number * 2", pattern: "return\\s+number\\s*\\*\\s*2\\s*;" }, { label: "Метод викликається", pattern: "Double\\s*\\(\\s*6\\s*\\)" }], hint: "Тип перед назвою методу — це тип значення, яке повертає метод.", solution: "static int Double(int number)\n{\n    return number * 2;\n}\n\nConsole.WriteLine(Double(6));" },
+				{ id: "oop", title: "Класи та об'єкти", task: "Створи клас Student з властивістю Name, конструктором і методом Greet().", filename: "Student.cs", checks: [{ label: "Оголошено клас Student", pattern: "class\\s+Student\\b" }, { label: "Є властивість Name", pattern: "string\\s+Name\\s*\\{\\s*get\\s*;\\s*set\\s*;\\s*\\}" }, { label: "Є конструктор Student", pattern: "Student\\s*\\(\\s*string\\s+name\\s*\\)" }, { label: "Є метод Greet", pattern: "string\\s+Greet\\s*\\(" }], starter: "class Student\n{\n    public string Name { get; set; }\n    // Додай конструктор і метод Greet\n}", hint: "Клас описує об'єкти, конструктор ініціалізує Name, а Greet повертає повідомлення.", solution: "class Student\n{\n    public string Name { get; set; }\n\n    public Student(string name)\n    {\n        Name = name;\n    }\n\n    public string Greet()\n    {\n        return $\"Hello, {Name}!\";\n    }\n}\n\nvar student = new Student(\"Ada\");\nConsole.WriteLine(student.Greet());" },
 				{ id: "project", title: "Проєкт: парні числа", task: "Перебери числа від 1 до 6 і виведи тільки парні.", filename: "Program.cs", starter: "for (int number = 1; number <= 6; number++)\n{\n    Console.WriteLine(number);\n}", checks: [{ label: "Цикл проходить від 1 до 6", pattern: "for\\s*\\(\\s*int\\s+number\\s*=\\s*1\\s*;\\s*number\\s*<=\\s*6" }, { label: "Перевіряється парність", pattern: "number\\s*%\\s*2\\s*==\\s*0" }, { label: "Вивід у перевірці парності", pattern: "if\\s*\\([^)]*number\\s*%\\s*2\\s*==\\s*0[^)]*\\)\\s*\\{?\\s*Console\\s*\\.\\s*WriteLine\\s*\\(\\s*number\\s*\\)" }], hint: "Залиш Console.WriteLine всередині if з умовою number % 2 == 0.", solution: "for (int number = 1; number <= 6; number++)\n{\n    if (number % 2 == 0)\n    {\n        Console.WriteLine(number);\n    }\n}", project: true }
 			]
 		},
@@ -481,9 +492,10 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				{ id: "hello", title: "Перша програма на Go", task: "Оголоси package main та виведи Hello, Go! через fmt.Println.", filename: "main.go", starter: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    // Виведи привітання\n}", checks: [{ label: "Є package main", pattern: "^\\s*package\\s+main\\b" }, { label: "Імпортовано fmt", pattern: "import\\s+(?:\\(\\s*)?[\"']fmt[\"']" }, { label: "Є функція main", pattern: "func\\s+main\\s*\\(" }, { label: "Виводиться Hello, Go!", pattern: "fmt\\.Println\\s*\\(\\s*[\"']Hello, Go![\"']\\s*\\)" }], hint: "Кожна виконувана Go-програма починається з package main та func main().", solution: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, Go!\")\n}" },
 				{ id: "variables", title: "Змінні та виведення типів", task: "Створи змінну name зі значенням Ada через := і виведи привітання fmt.Printf.", filename: "main.go", starter: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    name := \"Ada\"\n    // Виведи Hello, Ada!\n}", checks: [{ label: "name оголошено коротким присвоєнням", pattern: "\\bname\\s*:=\\s*[\"']Ada[\"']" }, { label: "name використано у форматованому виводі", pattern: "fmt\\.Printf\\s*\\(\\s*[\"'][^\"']*%s[^\"']*[\"']\\s*,\\s*name\\s*\\)" }], hint: "Специфікатор %s підставляє рядок у fmt.Printf.", solution: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    name := \"Ada\"\n    fmt.Printf(\"Hello, %s!\\n\", name)\n}" },
 				{ id: "functions", title: "Функції та значення", task: "Напиши функцію double, яка приймає int і повертає подвоєне число.", filename: "main.go", starter: "package main\n\nimport \"fmt\"\n\nfunc double(number int) int {\n    return number\n}\n\nfunc main() {\n    fmt.Println(double(6))\n}", checks: [{ label: "Функція приймає int і повертає int", pattern: "func\\s+double\\s*\\(\\s*number\\s+int\\s*\\)\\s+int" }, { label: "Повертається number * 2", pattern: "return\\s+number\\s*\\*\\s*2" }, { label: "Функцію викликано", pattern: "double\\s*\\(\\s*6\\s*\\)" }], hint: "У Go тип повернення пишуть після дужок параметрів.", solution: "package main\n\nimport \"fmt\"\n\nfunc double(number int) int {\n    return number * 2\n}\n\nfunc main() {\n    fmt.Println(double(6))\n}" },
+				{ id: "oop", title: "Структури, методи й інтерфейси", task: "Опиши Student через struct, додай метод Greet() і інтерфейс Greeter та виведи Hello, Ada!.", filename: "main.go", starter: "package main\n\nimport \"fmt\"\n\ntype Student struct {\n    name string\n}\n\n// Додай Greeter та метод Greet\n\nfunc main() {\n    var greeter Greeter = Student{name: \"Ada\"}\n    fmt.Println(greeter.Greet())\n}", checks: [{ label: "Student описано структурою", pattern: "type\\s+Student\\s+struct\\s*\\{" }, { label: "Greeter описує метод Greet", pattern: "type\\s+Greeter\\s+interface\\s*\\{[\\s\\S]*?Greet\\s*\\(\\s*\\)\\s+string" }, { label: "Student має метод Greet", pattern: "func\\s*\\(\\s*\\w+\\s+Student\\s*\\)\\s+Greet\\s*\\(\\s*\\)\\s+string" }, { label: "Інтерфейс використовується", pattern: "var\\s+greeter\\s+Greeter\\s*=\\s*Student" }], hint: "У Go об'єктний підхід будують із struct, методів із receiver та інтерфейсів — класів і наслідування немає.", solution: "package main\n\nimport \"fmt\"\n\ntype Student struct {\n    name string\n}\n\ntype Greeter interface {\n    Greet() string\n}\n\nfunc (s Student) Greet() string {\n    return \"Hello, \" + s.name + \"!\"\n}\n\nfunc main() {\n    var greeter Greeter = Student{name: \"Ada\"}\n    fmt.Println(greeter.Greet())\n}" },
 				{ id: "project", title: "Проєкт: HTTP health endpoint", task: "Створи HTTP-сервер із маршрутом /health, який відповідає статусом 200 і текстом ok.", filename: "main.go", starter: "package main\n\nimport (\n    \"net/http\"\n)\n\nfunc main() {\n    // Додай обробник і запусти сервер\n}", checks: [{ label: "Імпортовано net/http", pattern: "[\"']net/http[\"']" }, { label: "Додано обробник /health", pattern: "http\\.HandleFunc\\s*\\(\\s*[\"']/health[\"']" }, { label: "Відповідь містить ok", pattern: "Write\\s*\\(\\s*\\[\\]byte\\s*\\(\\s*[\"']ok[\"']\\s*\\)" }, { label: "Сервер слухає порт", pattern: "http\\.ListenAndServe\\s*\\(" }], hint: "http.HandleFunc реєструє обробник, а http.ListenAndServe запускає сервер.", solution: "package main\n\nimport (\n    \"net/http\"\n)\n\nfunc main() {\n    http.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n        w.WriteHeader(http.StatusOK)\n        _, _ = w.Write([]byte(\"ok\"))\n    })\n    http.ListenAndServe(\":8080\", nil)\n}", project: true }
 			]
-		}
+		},
 	};
 
 	const teaching = {
@@ -491,18 +503,21 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			hello: { explanation: "JavaScript виконує команди по черзі. console.log() показує значення в консолі, тож так зручно перевіряти результат програми.", example: "console.log('Hello, World!');", result: "У консолі з'явиться: Hello, World!" },
 			variables: { explanation: "Змінна зберігає значення, щоб ним можна було скористатися пізніше. const підходить для значення, яке не плануємо переприсвоювати; шаблонний рядок вставляє змінні через ${...}.", example: "const name = 'Ada';\nconst age = 30;\nconsole.log(`Hello, ${name}! You are ${age}.`);", result: "У консолі: Hello, Ada! You are 30." },
 			functions: { explanation: "Функція об'єднує команди й може приймати параметри. return повертає обчислений результат туди, де функцію викликали.", example: "function double(number) {\n  return number * 2;\n}\n\nconsole.log(double(4));", result: "Виклик double(4) виведе 8." },
+			oop: { explanation: "Клас задає спільний опис об'єктів. Конструктор створює їхній початковий стан, а методи працюють із цим станом через this.", example: "class Student {\n  constructor(name) { this.name = name; }\n  greet() { return `Hello, ${this.name}!`; }\n}\n\nconsole.log(new Student('Ada').greet());", result: "Об'єкт Student зберігає ім'я Ada та вітається через метод." },
 			project: { explanation: "Цикл проходить числа по одному, а умови вибирають, що вивести. Спершу перевіряємо кратність 3 і 5 разом, і лише потім кожну окремо.", example: "for (let n = 1; n <= 3; n++) {\n  if (n % 3 === 0) console.log('Fizz');\n  else console.log(n);\n}", result: "Результат: 1, 2, Fizz." }
 		},
 		python: {
 			hello: { explanation: "Python виконує команди послідовно. print() виводить текст у консоль; рядок у лапках сприймається як текст, а не як назва змінної.", example: "print('Hello, World!')", result: "У консолі з'явиться: Hello, World!" },
 			variables: { explanation: "Знак = присвоює значення змінній. f-рядок дає змогу підставляти змінні всередину тексту, записуючи їхні назви у фігурних дужках.", example: "name = 'Ada'\nage = 30\nprint(f'Hello, {name}! You are {age}.')", result: "У консолі: Hello, Ada! You are 30." },
 			functions: { explanation: "def створює функцію, а відступи показують, які команди до неї належать. return повертає результат і завершує роботу функції.", example: "def double(number):\n    return number * 2\n\nprint(double(4))", result: "Виклик double(4) виведе 8." },
+			oop: { explanation: "Клас описує дані й поведінку об'єктів. Метод __init__ запускається під час створення, а self посилається на конкретний об'єкт.", example: "class Student:\n    def __init__(self, name):\n        self.name = name\n\n    def greet(self):\n        return f'Hello, {self.name}!'\n\nprint(Student('Ada').greet())", result: "Об'єкт Student зберігає ім'я Ada та повертає привітання." },
 			project: { explanation: "for бере кожен елемент списку по черзі. Оператор % повертає остачу від ділення; у парного числа вона дорівнює нулю.", example: "for number in [1, 2, 3, 4]:\n    if number % 2 == 0:\n        print(number)", result: "У консолі з'являться 2 і 4." }
 		},
 		typescript: {
 			hello: { explanation: "TypeScript-код компілюється у JavaScript перед запуском. Команда console.log() працює так само й показує результат у консолі.", example: "console.log('Hello, World!');", result: "Після компіляції в консолі з'явиться Hello, World!." },
 			variables: { explanation: "Анотація : string явно вказує, що змінна містить текст. Типи допомагають помітити несумісні значення під час написання коду.", example: "const name: string = 'Ada';\nconsole.log(`Hello, ${name}!`);", result: "У консолі: Hello, Ada!" },
 			functions: { explanation: "Типи параметрів стоять біля їхніх назв, а тип після дужок задає тип результату. Тут функція приймає число й повертає число.", example: "function double(number: number): number {\n  return number * 2;\n}\n\nconsole.log(double(4));", result: "Виклик double(4) виведе 8." },
+			oop: { explanation: "TypeScript додає до класів JavaScript явні типи властивостей і результатів. Конструктор створює екземпляр, метод описує його поведінку.", example: "class Student {\n  constructor(public name: string) {}\n  greet(): string { return `Hello, ${this.name}!`; }\n}\n\nconsole.log(new Student('Ada').greet());", result: "Властивість name має тип string, а greet повертає string." },
 			project: { explanation: "Тип number[] означає список чисел. Цикл for...of бере кожен елемент, а умова % 2 === 0 залишає парні числа.", example: "const numbers: number[] = [1, 2, 3, 4];\nfor (const n of numbers) {\n  if (n % 2 === 0) console.log(n);\n}", result: "У консолі з'являться 2 і 4." }
 		},
 		sql: {
@@ -539,18 +554,22 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			hello: { explanation: "Console.WriteLine виводить текст у термінал і завершує рядок. Це поширена перша команда в C#.", example: "Console.WriteLine(\"Hello, World!\");", result: "У консолі з'явиться Hello, World!." },
 			variables: { explanation: "Тип string означає текст. Інтерполяція рядків вставляє значення змінної у текст за допомогою префікса $.", example: "string name = \"Ada\";\nConsole.WriteLine($\"Hello, {name}!\");", result: "У консолі: Hello, Ada!" },
 			functions: { explanation: "Метод об'єднує дії. Тип int перед назвою задає тип результату, а return повертає значення виклику.", example: "static int Double(int number)\n{\n    return number * 2;\n}", result: "Double(6) повертає 12." },
+			oop: { explanation: "Клас описує об'єкти та їхні властивості. Конструктор присвоює початкові значення, а метод може повертати результат для конкретного екземпляра.", example: "class Student\n{\n    public string Name { get; set; }\n    public Student(string name) { Name = name; }\n    public string Greet() => $\"Hello, {Name}!\";\n}", result: "Student(\"Ada\") створює об'єкт, а Greet() повертає привітання." },
 			project: { explanation: "Цикл for перебирає числа, а умова остачі від ділення залишає парні значення.", example: "for (int number = 1; number <= 6; number++)\n{\n    if (number % 2 == 0) Console.WriteLine(number);\n}", result: "У консолі з'являться 2, 4 і 6." }
 		},
 		go: {
 			hello: { explanation: "Go-програма виконується з package main та функції main. Пакет fmt містить засоби форматованого введення й виведення.", example: "package main\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, Go!\")\n}", result: "Програма виведе Hello, Go!." },
 			variables: { explanation: "Оператор := оголошує змінну й дозволяє компілятору вивести її тип. fmt.Printf форматує текст за допомогою %s для рядків.", example: "name := \"Ada\"\nfmt.Printf(\"Hello, %s!\\n\", name)", result: "У консолі: Hello, Ada!" },
 			functions: { explanation: "Тип результату функції в Go пишуть після списку параметрів. return повертає значення з відповідним типом.", example: "func double(number int) int {\n    return number * 2\n}", result: "Виклик double(6) повертає 12." },
+			oop: { explanation: "У Go немає класів і наслідування, але об'єктний підхід можна будувати композицією: struct зберігає стан, метод має receiver, а interface описує поведінку.", example: "type Greeter interface { Greet() string }\ntype Student struct { name string }\nfunc (s Student) Greet() string { return \"Hello, \" + s.name + \"!\" }", result: "Student задовольняє Greeter, бо має метод Greet із потрібною сигнатурою." },
 			project: { explanation: "Пакет net/http надає готовий HTTP-сервер. HandleFunc призначає обробник маршруту, ListenAndServe запускає сервер.", example: "http.HandleFunc(\"/health\", func(w http.ResponseWriter, r *http.Request) {\n    w.WriteHeader(http.StatusOK)\n    _, _ = w.Write([]byte(\"ok\"))\n})\nhttp.ListenAndServe(\":8080\", nil)", result: "GET /health відповідає статусом 200 і текстом ok." }
-		}
+		},
 	};
 
 	const stateKey = "feler-curriculum-v1";
 	const draftKey = "feler-route-drafts-v1";
+	const profileKey = "feler-profile-v1";
+	const profileCharacterTemplate = document.querySelector("#profileCharacterTemplate");
 	const routeContinuations = { fastapi: "django" };
 	const accountDialog = document.querySelector("#accountDialog");
 	const accountButton = document.querySelector("#accountButton");
@@ -597,6 +616,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 	let cloudSyncTimer;
 	let cloudSyncQueue = Promise.resolve();
 	let state = readState();
+	let profile = readProfile();
 	let activeTrack = "";
 	let activeIndex = 0;
 	let codeMirror;
@@ -635,6 +655,66 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		}
 	}
 
+	const profileCharacterColors = {
+		skin: { light: "#f4c8a9", medium: "#c98762", deep: "#83543f" },
+		hairColor: { brown: "#49322b", black: "#27242b", blonde: "#d8a43b", blue: "#47699d" },
+		outfit: { green: "#78a858", blue: "#4f79b2", violet: "#8768b2", coral: "#d96d62" }
+	};
+
+	function normalizeCharacter(saved) {
+		const character = saved && typeof saved === "object" && !Array.isArray(saved) ? saved : {};
+		return {
+			skin: ["light", "medium", "deep"].includes(character.skin) ? character.skin : "light",
+			hair: ["short", "curly", "long"].includes(character.hair) ? character.hair : "short",
+			hairColor: ["brown", "black", "blonde", "blue"].includes(character.hairColor) ? character.hairColor : "brown",
+			outfit: ["green", "blue", "violet", "coral"].includes(character.outfit) ? character.outfit : "green",
+			accessory: ["none", "glasses", "headphones"].includes(character.accessory) ? character.accessory : "none"
+		};
+	}
+
+	function readCharacterForm() {
+		return normalizeCharacter({
+			skin: document.querySelector("#characterSkin").value,
+			hair: document.querySelector("#characterHair").value,
+			hairColor: document.querySelector("#characterHairColor").value,
+			outfit: document.querySelector("#characterOutfit").value,
+			accessory: document.querySelector("#characterAccessory").value
+		});
+	}
+
+	function renderCharacter(container, character) {
+		const svg = profileCharacterTemplate.content.firstElementChild.cloneNode(true);
+		svg.dataset.hair = character.hair;
+		svg.dataset.accessory = character.accessory;
+		svg.style.setProperty("--character-skin", profileCharacterColors.skin[character.skin]);
+		svg.style.setProperty("--character-hair", profileCharacterColors.hairColor[character.hairColor]);
+		svg.style.setProperty("--character-outfit", profileCharacterColors.outfit[character.outfit]);
+		container.replaceChildren(svg);
+	}
+
+	function renderCharacterPreview() {
+		renderCharacter(document.querySelector("#profileModalAvatar"), readCharacterForm());
+	}
+
+	function normalizeProfile(saved = {}) {
+		return {
+			name: typeof saved.name === "string" ? saved.name.trim().slice(0, 40) : "",
+			avatar: typeof saved.avatar === "string" && saved.avatar.length <= 4 ? saved.avatar : "👩‍💻",
+			character: normalizeCharacter(saved.character),
+			goal: ["web", "backend", "data"].includes(saved.goal) ? saved.goal : "web",
+			minutes: [10, 20, 30].includes(Number(saved.minutes)) ? Number(saved.minutes) : 10,
+			darkMode: saved.darkMode === true
+		};
+	}
+
+	function readProfile() {
+		try {
+			return normalizeProfile(JSON.parse(localStorage.getItem(profileKey) || "{}"));
+		} catch {
+			return normalizeProfile();
+		}
+	}
+
 	function saveState() {
 		try { localStorage.setItem(scopedStorageKey(stateKey), JSON.stringify(state)); } catch { }
 		scheduleCloudSync();
@@ -667,11 +747,97 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountStatus.classList.toggle("is-error", isError);
 	}
 
+	function renderStudyPlan() {
+		const goal = profile.goal;
+		const route = goal === "backend" ? "python" : goal === "data" ? "python" : "html";
+		const descriptionKey = goal === "backend" ? "planBackend" : goal === "data" ? "planData" : "planWeb";
+		document.querySelector("#studyGoal").value = goal;
+		document.querySelector("#studyPlanDescription").textContent = window.FelerI18n.t(descriptionKey, { minutes: profile.minutes });
+		document.querySelector("#startStudyPlan").dataset.track = route;
+	}
+
+	function renderProfileStats() {
+		const completedCount = Object.values(state.completed).reduce((total, items) => total + items.length, 0);
+		const completedTracks = Object.keys(tracks).filter(trackId => {
+			const done = completedLessons(trackId);
+			const quizzes = state.quizDone[trackId] || [];
+			return done.length === tracks[trackId].lessons.length && tracks[trackId].lessons.every(lesson => quizzes.includes(lesson.id));
+		}).length;
+		document.querySelector("#profileLessonsCount").textContent = String(completedCount);
+		document.querySelector("#profileTracksCount").textContent = String(completedTracks);
+		document.querySelector("#profileStreakCount").textContent = document.querySelector("#streakCount").textContent || "0";
+	}
+
+	function applyProfileUI() {
+		const displayName = profile.name || currentUser?.user_metadata?.display_name || currentUser?.email || window.FelerI18n.t("profileDefaultName");
+		document.documentElement.dataset.theme = profile.darkMode ? "dark" : "light";
+		document.querySelector("#sidebarDisplayName").textContent = displayName;
+		renderCharacter(document.querySelector("#profileAvatar"), profile.character);
+		renderCharacter(document.querySelector("#profileModalAvatar"), profile.character);
+		document.querySelector("#profileModalName").textContent = displayName;
+		document.querySelector("#profileEmail").textContent = currentUser?.email || window.FelerI18n.t("profileGuestAccount");
+		document.querySelector("#openAccountFromProfile").textContent = window.FelerI18n.t(currentUser ? "manageAccount" : "openAccount");
+		document.querySelector("#sidebarAccountLabel").textContent = window.FelerI18n.t(currentUser ? "syncedProgress" : "guestProgress");
+		if (!activeTrack) {
+			const goalName = profile.goal === "backend" ? "profileGoalBackend" : profile.goal === "data" ? "profileGoalData" : "profileGoalWeb";
+			document.querySelector(".goal-row span:first-child").textContent = window.FelerI18n.t(goalName);
+		}
+		document.querySelector("#profileName").value = profile.name || currentUser?.user_metadata?.display_name || "";
+		document.querySelector("#characterSkin").value = profile.character.skin;
+		document.querySelector("#characterHair").value = profile.character.hair;
+		document.querySelector("#characterHairColor").value = profile.character.hairColor;
+		document.querySelector("#characterOutfit").value = profile.character.outfit;
+		document.querySelector("#characterAccessory").value = profile.character.accessory;
+		document.querySelector("#profileGoal").value = profile.goal;
+		document.querySelector("#profileMinutes").value = String(profile.minutes);
+		document.querySelector("#profileDarkMode").checked = profile.darkMode;
+		renderProfileStats();
+		renderStudyPlan();
+	}
+
+	async function saveProfilePreferences() {
+		const nextProfile = normalizeProfile({
+			name: document.querySelector("#profileName").value.trim().slice(0, 40),
+			avatar: profile.avatar,
+			character: readCharacterForm(),
+			goal: ["web", "backend", "data"].includes(document.querySelector("#profileGoal").value) ? document.querySelector("#profileGoal").value : "web",
+			minutes: [10, 20, 30].includes(Number(document.querySelector("#profileMinutes").value)) ? Number(document.querySelector("#profileMinutes").value) : 10,
+			darkMode: document.querySelector("#profileDarkMode").checked
+		});
+		const status = document.querySelector("#profileStatus");
+		const saveButton = document.querySelector("#saveProfile");
+		saveButton.disabled = true;
+		try {
+			if (currentUser) {
+				const userId = currentUser.id;
+				const { data, error } = await supabaseClient.auth.updateUser({
+					data: { display_name: nextProfile.name, feler_profile: nextProfile }
+				});
+				if (error) throw error;
+				if (!data.user || currentUser?.id !== userId) throw new Error("Сеанс акаунта змінився. Увійди знову й повтори спробу.");
+				currentUser = data.user;
+				profile = normalizeProfile(data.user.user_metadata?.feler_profile || nextProfile);
+				updateAccountUI(data.user);
+			} else {
+				localStorage.setItem(profileKey, JSON.stringify(nextProfile));
+				profile = nextProfile;
+			}
+			applyProfileUI();
+			status.textContent = window.FelerI18n.t(currentUser ? "profileSavedAccount" : "profileSavedGuest");
+			status.classList.remove("is-error");
+			return true;
+		} catch (error) {
+			status.textContent = window.FelerI18n.t(currentUser ? "profileSaveError" : "profileStorageError", { message: error.message });
+			status.classList.add("is-error");
+			return false;
+		} finally {
+			saveButton.disabled = false;
+		}
+	}
+
 	function updateAccountUI(user = currentUser) {
 		const name = user?.user_metadata?.display_name || user?.email || "";
-		document.querySelector("#sidebarDisplayName").textContent = user ? name : "Майбутній розробник";
-		document.querySelector("#sidebarAccountLabel").textContent = user ? "Прогрес синхронізується" : "Гостьовий прогрес";
-		accountButton.textContent = user ? name : "Увійти / створити акаунт";
+		accountButton.textContent = user ? name : window.FelerI18n.t("openAccount");
 		accountDisplayName.value = name;
 		accountDisplayName.readOnly = Boolean(user);
 		accountEmail.value = user?.email || "";
@@ -685,6 +851,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountSignIn.disabled = !supabaseClient || Boolean(user);
 		accountSignUp.disabled = !supabaseClient || Boolean(user);
 		accountSignOut.disabled = !supabaseClient || !user;
+		applyProfileUI();
 	}
 
 	function replaceRouteDrafts(drafts) {
@@ -725,6 +892,11 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 	async function loadAccountProgress(user) {
 		currentUser = user;
+		const savedProfile = user.user_metadata?.feler_profile;
+		profile = normalizeProfile({
+			...(savedProfile && typeof savedProfile === "object" && !Array.isArray(savedProfile) ? savedProfile : {}),
+			name: savedProfile?.name || user.user_metadata?.display_name || ""
+		});
 		state = readState();
 		replaceRouteDrafts(readDrafts());
 		updateAccountUI(user);
@@ -766,6 +938,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		}
 		if (!currentUser) return;
 		currentUser = null;
+		profile = readProfile();
 		state = readState();
 		replaceRouteDrafts(readDrafts());
 		activeTrack = "";
@@ -788,9 +961,19 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 	function getEmailRedirectUrl() {
 		const redirectUrl = new URL(window.location.href);
+		const hostname = redirectUrl.hostname.toLowerCase();
+		const localHost = hostname === "localhost" || hostname.endsWith(".localhost") ||
+			hostname === "0.0.0.0" || hostname.startsWith("127.") ||
+			hostname === "[::1]" || hostname === "::1";
+		if (!["http:", "https:"].includes(redirectUrl.protocol) || localHost) return "";
 		redirectUrl.search = "";
 		redirectUrl.hash = "";
 		return redirectUrl.href;
+	}
+
+	function getEmailRedirectOptions() {
+		const emailRedirectTo = getEmailRedirectUrl();
+		return emailRedirectTo ? { emailRedirectTo } : {};
 	}
 
 	async function signIn() {
@@ -818,12 +1001,13 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		accountSignUp.disabled = true;
 		setAccountStatus("Створюю акаунт…");
 		try {
+			const initialProfile = normalizeProfile({ ...profile, name: accountDisplayName.value.trim() });
 			const { data, error } = await supabaseClient.auth.signUp({
 				email: accountEmail.value.trim(),
 				password: accountPassword.value,
 				options: {
-					data: { display_name: accountDisplayName.value.trim() },
-					emailRedirectTo: getEmailRedirectUrl()
+					data: { display_name: initialProfile.name, feler_profile: initialProfile },
+					...getEmailRedirectOptions()
 				}
 			});
 			if (error) {
@@ -848,7 +1032,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			const { error } = await supabaseClient.auth.resend({
 				type: "signup",
 				email: accountEmail.value.trim(),
-				options: { emailRedirectTo: getEmailRedirectUrl() }
+				options: getEmailRedirectOptions()
 			});
 			if (error) setAccountStatus(`Не вдалося надіслати лист: ${error.message}`, true);
 			else setAccountStatus("Запит прийнято. Перевір пошту та папки «Спам» і «Промоакції». Якщо листа немає, перевір SMTP у налаштуваннях Supabase.");
@@ -900,6 +1084,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				hello: { question: "Звідки починається виконання Go-програми?", options: ["func main у package main", "Клас MainWindow", "Файл README"], answer: 0 },
 				variables: { question: "Що робить оператор := у Go?", options: ["Оголошує змінну з виведенням типу", "Порівнює два числа", "Запускає HTTP-сервер"], answer: 0 },
 				functions: { question: "Де в Go вказують тип результату функції?", options: ["Після параметрів", "Перед назвою пакета", "У коментарі"], answer: 0 },
+				oop: { question: "Які засоби Go використовує для об'єктного підходу?", options: ["struct, методи та інтерфейси", "Класи й наслідування", "Тільки глобальні змінні"], answer: 0 },
 				project: { question: "Який пакет містить базовий HTTP-сервер Go?", options: ["net/http", "fmt/html", "go/server"], answer: 0 }
 			}
 		};
@@ -908,6 +1093,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			hello: { question: "Яка мета цього першого завдання?", options: ["Побачити простий і зрозумілий результат", "Додати складну залежність", "Зберегти пароль у коді"], answer: 0 },
 			variables: { question: "Як найкраще називати змінні та поля?", options: ["Випадковими літерами", "Так, щоб назва пояснювала значення", "Однаково для всіх даних"], answer: 1 },
 			functions: { question: "Навіщо функція повертає результат?", options: ["Щоб його можна було використати після виклику", "Щоб зупинити редактор", "Щоб автоматично створити файл"], answer: 0 },
+			oop: { question: "Що описує клас у об'єктно-орієнтованому програмуванні?", options: ["Спільні дані та поведінку об'єктів", "Лише порядок виконання рядків", "Тільки зовнішній вигляд сторінки"], answer: 0 },
 			project: { question: "Що важливо перед завершенням мініпроєкту?", options: ["Перевірити всі вимоги завдання", "Сховати помилки", "Видалити назви змінних"], answer: 0 }
 		};
 		return quizzes[lesson.id];
@@ -963,6 +1149,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
 	}
 
 	function renderAchievements() {
+		renderProfileStats();
+		renderProjectCards();
 		if (!achievementList) return;
 		const allCompletions = Object.values(state.completed).reduce((total, items) => total + items.length, 0);
 		const finishedTracks = Object.keys(tracks).filter(trackId => {
@@ -972,10 +1160,10 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		});
 		const answeredQuizzes = Object.values(state.quizDone).reduce((total, items) => total + items.length, 0);
 		const badges = [
-			{ title: "Перший крок", description: "Зарахуй перший урок.", unlocked: allCompletions > 0 },
-			{ title: "Допитливий", description: "Пройди 5 вікторин.", unlocked: answeredQuizzes >= 5 },
-			{ title: "Фінішер", description: "Заверши будь-який маршрут.", unlocked: finishedTracks.length > 0 },
-			{ title: "Майстер маршрутів", description: "Заверши 3 маршрути.", unlocked: finishedTracks.length >= 3 }
+			{ title: window.FelerI18n.t("badgeFirst"), description: window.FelerI18n.t("badgeFirstDescription"), unlocked: allCompletions > 0 },
+			{ title: window.FelerI18n.t("badgeCurious"), description: window.FelerI18n.t("badgeCuriousDescription"), unlocked: answeredQuizzes >= 5 },
+			{ title: window.FelerI18n.t("badgeFinisher"), description: window.FelerI18n.t("badgeFinisherDescription"), unlocked: finishedTracks.length > 0 },
+			{ title: window.FelerI18n.t("badgeMaster"), description: window.FelerI18n.t("badgeMasterDescription"), unlocked: finishedTracks.length >= 3 }
 		];
 		achievementList.replaceChildren(...badges.map(badge => {
 			const card = document.createElement("article");
@@ -989,6 +1177,21 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			card.append(icon, title, description);
 			return card;
 		}));
+	}
+
+	function renderProjectCards() {
+		for (const card of document.querySelectorAll("[data-project-track]")) {
+			const trackId = card.dataset.projectTrack;
+			const project = tracks[trackId]?.lessons.find(lesson => lesson.project);
+			if (!project) continue;
+
+			const completed = completedLessons(trackId).includes(project.id) &&
+				(state.quizDone[trackId] || []).includes(project.id);
+			const started = Object.hasOwn(routeDrafts, `${trackId}:${project.id}`);
+			const status = card.querySelector(".project-link");
+			status.textContent = window.FelerI18n.t(completed ? "projectCompleted" : started ? "projectContinue" : "projectStart");
+			card.classList.toggle("is-complete", completed);
+		}
 	}
 
 	function refreshProgress() {
@@ -1010,7 +1213,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			button.type = "button";
 			button.className = `rail-step${index === activeIndex ? " is-active" : ""}${completed.includes(lesson.id) ? " is-done" : ""}`;
 			button.disabled = !unlocked;
-			button.innerHTML = `<span>${String(index + 1).padStart(2, "0")}</span><strong>${lesson.project ? "Проєкт" : lesson.title}</strong>`;
+			button.innerHTML = `<span>${String(index + 1).padStart(2, "0")}</span><strong>${lesson.project ? window.FelerI18n.t("finalProject") : lesson.title}</strong>`;
 			button.addEventListener("click", () => showLesson(index));
 			return button;
 		}));
@@ -1072,6 +1275,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 		if (!tracks[trackId]) return;
 		activeTrack = trackId;
 		state.selected = trackId;
+		document.querySelector("#sandboxTitle").removeAttribute("data-i18n");
 		sandboxLanguage.value = trackId;
 		saveState();
 		document.body.classList.remove("needs-track");
@@ -1085,7 +1289,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
 	function showLanguageGate() {
 		document.body.classList.remove("is-learning");
 		document.body.classList.add("needs-track");
+		document.querySelector("#sandboxTitle").dataset.i18n = "sandboxTitle";
 		document.querySelectorAll(".nav-link").forEach(link => link.classList.toggle("is-active", link.id === "navLanguages"));
+		renderProjectCards();
 		languageGate.scrollIntoView({ behavior: "smooth", block: "start" });
 	}
 
@@ -1377,13 +1583,22 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			fastapi: { filename: "main.py", label: "FastAPI", output: "console", hint: "Код FastAPI перевіряється у навчальному маршруті.", code: "from fastapi import FastAPI\n\napp = FastAPI()" },
 			django: { filename: "views.py", label: "Django", output: "console", hint: "Код Django перевіряється у навчальному маршруті.", code: "from django.http import JsonResponse\n\n# Створи Django view" },
 			csharp: { filename: "Program.cs", label: "C#", output: "console", hint: "Код C# перевіряється у навчальному маршруті.", code: "Console.WriteLine(\"Hello, World!\");" },
-			go: { filename: "main.go", label: "Go", output: "console", hint: "Код Go перевіряється у навчальному маршруті.", code: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, Go!\")\n}" }
+			go: { filename: "main.go", label: "Go", output: "console", hint: "Код Go перевіряється у навчальному маршруті.", code: "package main\n\nimport \"fmt\"\n\nfunc main() {\n    fmt.Println(\"Hello, Go!\")\n}" },
 		};
 		Object.assign(sandboxExamples, legacyExamples);
 		document.querySelector("#runSandbox").removeEventListener("click", runSandbox);
 		const practiceSection = document.querySelector("#practice");
 		document.querySelector("#sandbox .sandbox-panel").before(challengeCopy);
 		challengeCopy.classList.add("lesson-card");
+		for (const icon of document.querySelectorAll(".track-brand img")) {
+			const brand = icon.closest(".track-brand");
+			const showFallback = () => brand.classList.add("is-icon-fallback");
+			icon.addEventListener("error", showFallback, { once: true });
+			if (icon.complete && icon.naturalWidth === 0) showFallback();
+		}
+		for (const control of document.querySelectorAll("[data-character-part]")) {
+			control.addEventListener("change", renderCharacterPreview);
+		}
 		connectEditor();
 		window.addEventListener("message", onRouteMessage);
 		updateAccountUI();
@@ -1398,6 +1613,37 @@ document.querySelectorAll(".nav-link").forEach(link => {
 			} else {
 				setAccountStatus("Можеш навчатися без акаунта або увійти, щоб синхронізувати прогрес.");
 			}
+		});
+		const profileDialog = document.querySelector("#profileDialog");
+		const openProfile = () => {
+			applyProfileUI();
+			document.querySelector("#profileStatus").textContent = "";
+			document.querySelector("#profileStatus").classList.remove("is-error");
+			profileDialog.showModal();
+		};
+		document.querySelector("#profileButton").addEventListener("click", openProfile);
+		document.querySelector("#profileQuickButton").addEventListener("click", openProfile);
+		document.querySelector("#profileClose").addEventListener("click", () => profileDialog.close());
+		document.querySelector("#profileForm").addEventListener("submit", event => {
+			event.preventDefault();
+			saveProfilePreferences();
+		});
+		document.querySelector("#studyGoal").addEventListener("change", event => {
+			document.querySelector("#profileGoal").value = event.currentTarget.value;
+			saveProfilePreferences();
+		});
+		document.querySelector("#startStudyPlan").addEventListener("click", () => enterTrack(document.querySelector("#startStudyPlan").dataset.track));
+		for (const project of document.querySelectorAll("[data-project-track]")) {
+			project.addEventListener("click", () => {
+				const trackId = project.dataset.projectTrack;
+				enterTrack(trackId);
+				const projectIndex = tracks[trackId].lessons.findIndex(lesson => lesson.project);
+				if (projectIndex >= 0) showLesson(projectIndex);
+			});
+		}
+		document.querySelector("#openAccountFromProfile").addEventListener("click", () => {
+			profileDialog.close();
+			accountButton.click();
 		});
 		document.querySelector("#accountClose").addEventListener("click", () => accountDialog.close());
 		document.querySelector("#accountForm").addEventListener("submit", event => event.preventDefault());
@@ -1431,6 +1677,13 @@ document.querySelectorAll(".nav-link").forEach(link => {
 				: "Гостьовий режим активний. Для акаунтів налаштуй Supabase.", Boolean(supabaseConfigError));
 		}
 		document.querySelector("#changeLanguage").addEventListener("click", showLanguageGate);
+		document.querySelector("#siteLanguage").addEventListener("change", event => window.FelerI18n.setLanguage(event.currentTarget.value));
+		window.addEventListener("feler-language-change", () => {
+			applyProfileUI();
+			updateTodayLabel();
+			updateProgressView();
+			renderAchievements();
+		});
 		document.querySelector("#navLanguages").addEventListener("click", event => { event.preventDefault(); showLanguageGate(); });
 		document.querySelector("#showHint").addEventListener("click", () => {
 			hintPanel.hidden = !hintPanel.hidden;

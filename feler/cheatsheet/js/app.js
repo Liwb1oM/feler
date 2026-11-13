@@ -60,6 +60,8 @@
         item.code && item.code.src,
         item.tip && item.tip.uk,
         item.tip && item.tip.en,
+        item.warn && item.warn.uk,
+        item.warn && item.warn.en,
         item.kw,
       ]
         .filter(Boolean)

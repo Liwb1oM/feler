@@ -24,7 +24,7 @@
 
         <div class="topbar__actions">
           <a class="btn btn--ghost" href="../#home" data-i18n="backToFeler">← До Feler</a>
-          <div class="seg" role="group" aria-label="Language">
+          <div class="seg" role="group" aria-label="Language" data-i18n-aria="languageLabel">
             <button type="button" class="seg__btn" data-lang="uk" aria-pressed="true">UA</button>
             <button type="button" class="seg__btn" data-lang="en" aria-pressed="false">EN</button>
           </div>
@@ -47,12 +47,13 @@
           autocomplete="off"
           spellcheck="false"
           data-i18n-placeholder="search"
+          data-i18n-aria="searchLabel"
           placeholder="Пошук: flex, useEffect, SELECT…"
           aria-label="Search"
         />
       </div>
 
-      <nav id="nav" class="nav" aria-label="Topics"></nav>
+      <nav id="nav" class="nav" aria-label="Topics" data-i18n-aria="topics"></nav>
     </header>
 
     <main id="content" class="content" tabindex="-1"></main>
